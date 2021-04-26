@@ -1,8 +1,16 @@
 package net.novatech.protocol;
 
-import lombok.Getter;
+import java.net.InetSocketAddress;
+import java.net.SocketException;
 
-public class ProtocolServer {
+import io.gomint.jraknet.ServerSocket;
+import io.gomint.jraknet.Socket;
+import io.gomint.jraknet.SocketEvent;
+import io.gomint.jraknet.SocketEventHandler;
+import lombok.Getter;
+import lombok.Setter;
+
+public class ProtocolServer implements GameSession{
 	
 	@Getter
 	private String host;
@@ -11,9 +19,18 @@ public class ProtocolServer {
 	@Getter
 	private GameProtocol gameProtocol;
 	@Getter
-	private ServerLoginListener loginListener;
+	@Setter
+	private LoginListener loginListener;
 	@Getter
-	private ServerGameListener gameListener;
+	@Setter
+	private GameListener gameListener;
+	@Getter
+	@Setter
+	private int maxConnections;
+	
+	public ProtocolServer(InetSocketAddress address, GameProtocol protocolType) {
+		this(address.getAddress().toString(), address.getPort(), protocolType);
+	}
 	
 	public ProtocolServer(String host, int port, GameProtocol protocolType) {
 		this.host = host;
@@ -21,16 +38,37 @@ public class ProtocolServer {
 		this.gameProtocol = protocolType;
 	}
 	
-	public void setLoginListener(ServerLoginListener listener) {
-		this.loginListener = listener;
-	}
-	
-	public void setGameListener(ServerGameListener listener) {
-		this.gameListener = listener;
-	}
-	
 	public void bind() {
+		switch(this.gameProtocol) {
+		case JAVA:
+			break;
+		case BEDROCK:
+			bindBedrock();
+			break;
+		}
+	}
+	
+	private void bindJava() {
 		
+	}
+	
+	private void bindBedrock() {
+		ServerSocket socket = new ServerSocket(getMaxConnections());
+		socket.setEventHandler(new SocketEventHandler() {
+
+			@Override
+			public void onSocketEvent(Socket socket, SocketEvent event) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+		});
+		try {
+			socket.bind(getHost(), getPort());
+		} catch (SocketException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	

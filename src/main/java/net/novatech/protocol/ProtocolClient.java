@@ -1,5 +1,6 @@
 package net.novatech.protocol;
 
+import java.net.InetSocketAddress;
 import java.net.SocketException;
 
 import io.gomint.jraknet.ClientSocket;
@@ -7,9 +8,10 @@ import io.gomint.jraknet.Socket;
 import io.gomint.jraknet.SocketEvent;
 import io.gomint.jraknet.SocketEventHandler;
 import lombok.Getter;
+import lombok.Setter;
 import net.novatech.protocol.tcp.TcpClient;
 
-public class ProtocolClient {
+public class ProtocolClient implements GameSession{
 	
 	@Getter
 	private String host;
@@ -19,6 +21,17 @@ public class ProtocolClient {
 	private GameProtocol gameProtocol;
 	@Getter
 	private ServerConnectInfo connectedServer = null;
+	
+	@Getter
+	@Setter
+	private LoginListener loginListener;
+	@Getter
+	@Setter
+	private GameListener gameListener;
+	
+	public ProtocolClient(InetSocketAddress address, GameProtocol protocolType) {
+		this(address.getAddress().toString(), address.getPort(), protocolType);
+	}
 	
 	public ProtocolClient(String host, int port, GameProtocol protocolType) {
 		this.host = host;
