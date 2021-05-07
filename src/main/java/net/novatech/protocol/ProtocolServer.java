@@ -10,7 +10,7 @@ import io.gomint.jraknet.SocketEventHandler;
 import lombok.Getter;
 import lombok.Setter;
 
-public class ProtocolServer implements GameSession{
+public class ProtocolServer {
 	
 	@Getter
 	private String host;
@@ -18,12 +18,6 @@ public class ProtocolServer implements GameSession{
 	private int port;
 	@Getter
 	private GameProtocol gameProtocol;
-	@Getter
-	@Setter
-	private LoginListener loginListener;
-	@Getter
-	@Setter
-	private GameListener gameListener;
 	@Getter
 	@Setter
 	private int maxConnections;
@@ -55,11 +49,17 @@ public class ProtocolServer implements GameSession{
 	private void bindBedrock() {
 		ServerSocket socket = new ServerSocket(getMaxConnections());
 		socket.setEventHandler(new SocketEventHandler() {
-
 			@Override
 			public void onSocketEvent(Socket socket, SocketEvent event) {
-				// TODO Auto-generated method stub
-				
+				switch(event.getType()) {
+				case NEW_INCOMING_CONNECTION:
+					break;
+				case CONNECTION_CLOSED:
+				case CONNECTION_DISCONNECTED:
+					break;
+				case UNCONNECTED_PING:
+					break;
+				}
 			}
 			
 		});

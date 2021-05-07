@@ -9,9 +9,10 @@ import io.gomint.jraknet.SocketEvent;
 import io.gomint.jraknet.SocketEventHandler;
 import lombok.Getter;
 import lombok.Setter;
+import net.novatech.protocol.packet.AbstractPacket;
 import net.novatech.protocol.tcp.TcpClient;
 
-public class ProtocolClient implements GameSession{
+public class ProtocolClient{
 	
 	@Getter
 	private String host;
@@ -21,13 +22,6 @@ public class ProtocolClient implements GameSession{
 	private GameProtocol gameProtocol;
 	@Getter
 	private ServerConnectInfo connectedServer = null;
-	
-	@Getter
-	@Setter
-	private LoginListener loginListener;
-	@Getter
-	@Setter
-	private GameListener gameListener;
 	
 	public ProtocolClient(InetSocketAddress address, GameProtocol protocolType) {
 		this(address.getAddress().toString(), address.getPort(), protocolType);
@@ -43,6 +37,10 @@ public class ProtocolClient implements GameSession{
 		info.setGameProtocol(gameProtocol);
 		this.connectedServer = info;
 		handleConnection();
+	}
+	
+	public void sendPacket(AbstractPacket packet) {
+		
 	}
 	
 	private void handleConnection() {

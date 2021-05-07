@@ -1,5 +1,9 @@
 package net.novatech.protocol;
 
-public abstract class GameListener {
+import net.novatech.protocol.packet.AbstractPacket;
 
+public abstract class GameListener {
+	
+	public abstract void receivePacket(AbstractPacket packet);
+	
 }
