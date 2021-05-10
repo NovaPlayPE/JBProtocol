@@ -8,9 +8,9 @@ public abstract class LoginListener {
 	@Getter
 	private GameSession session;
 	@Getter
-	private GameProtocol protocol;
+	private GameVersion protocol;
 	
-	public LoginListener(GameSession session, GameProtocol protocol) {
+	public LoginListener(GameSession session, GameVersion protocol) {
 		this.session = session;
 	}
 	

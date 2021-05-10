@@ -1,10 +1,10 @@
 package net.novatech.protocol;
 
-public enum GameProtocol {
+public enum GameVersion {
 	JAVA("1.17.0"),
 	BEDROCK("1.17.0");
 	
-	GameProtocol(String version) {
+	GameVersion(String version) {
 		this.version = version;
 	}
 	

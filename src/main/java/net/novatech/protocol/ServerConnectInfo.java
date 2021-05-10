@@ -11,7 +11,7 @@ public class ServerConnectInfo {
 	public InetSocketAddress address;
 	@Getter
 	@Setter
-	public GameProtocol gameProtocol;
+	public GameVersion gameProtocol;
 	
 	public ServerConnectInfo(InetSocketAddress address) {
 		this.address = address;

@@ -1,13 +1,13 @@
 package net.novatech.protocol.bedrock;
 
-import net.novatech.protocol.GameProtocol;
+import net.novatech.protocol.GameVersion;
 import net.novatech.protocol.MinecraftProtocol;
 import net.novatech.protocol.bedrock.packets.LoginPacket;
 
 public class BedrockProtocol extends MinecraftProtocol {
 	
 	public BedrockProtocol() {
-		this.gameVersion = GameProtocol.BEDROCK;
+		this.gameVersion = GameVersion.BEDROCK;
 		registerPackets();
 	}
 	

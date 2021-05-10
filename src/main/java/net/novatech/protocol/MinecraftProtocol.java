@@ -9,7 +9,7 @@ import lombok.Getter;
 public abstract class MinecraftProtocol {
 	
 	@Getter
-	public GameProtocol gameVersion;
+	public GameVersion gameVersion;
 	
 	public MinecraftProtocol() {
 	}
