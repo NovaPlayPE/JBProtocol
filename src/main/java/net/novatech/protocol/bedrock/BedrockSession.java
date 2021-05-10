@@ -13,7 +13,7 @@ import net.novatech.protocol.GameSession;
 import net.novatech.protocol.LoginListener;
 import net.novatech.protocol.MinecraftProtocol;
 import net.novatech.protocol.bedrock.packets.BedrockPacket;
-
+import net.novatech.protocol.bedrock.packets.LoginPacket;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -63,6 +63,12 @@ public class BedrockSession implements GameSession {
 		
 		BedrockPacket pk = (BedrockPacket) getProtocol().createPacket((byte)pid);
 		pk.read(pB.getBuffer());
+		
+		if(pk instanceof LoginPacket) {
+			LoginPacket login = (LoginPacket)pk;
+			BedrockSessionData data = new BedrockSessionData();
+			this.loginListener.loginCompleted(data);
+		}
 		
 		this.gameListener.receivePacket(pk);
 		return pid;
