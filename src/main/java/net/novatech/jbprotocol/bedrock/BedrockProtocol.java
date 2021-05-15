@@ -1,0 +1,18 @@
+package net.novatech.jbprotocol.bedrock;
+
+import net.novatech.jbprotocol.GameVersion;
+import net.novatech.jbprotocol.MinecraftProtocol;
+import net.novatech.jbprotocol.bedrock.packets.LoginPacket;
+
+public class BedrockProtocol extends MinecraftProtocol {
+	
+	public BedrockProtocol() {
+		this.gameVersion = GameVersion.BEDROCK;
+		registerPackets();
+	}
+	
+	public void registerPackets() {
+		registerIncomingPacket((byte)0x01, LoginPacket.class);
+	}
+	
+}
