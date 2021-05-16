@@ -1,53 +1,52 @@
 package net.novatech.jbprotocol.java;
 
+import lombok.Getter;
+import lombok.Setter;
 import net.novatech.jbprotocol.GameSession;
 import net.novatech.jbprotocol.MinecraftProtocol;
+import net.novatech.jbprotocol.java.packets.JavaPacket;
 import net.novatech.jbprotocol.listener.GameListener;
 import net.novatech.jbprotocol.listener.LoginListener;
 import net.novatech.jbprotocol.packet.AbstractPacket;
+import net.novatech.jbprotocol.tcp.TcpSession;
 
 public class JavaSession implements GameSession {
 
-	@Override
-	public void setLoginListener(LoginListener listener) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public LoginListener getLoginListener() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public void setGameListener(GameListener listener) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public GameListener getGameListener() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public MinecraftProtocol getProtocol() {
-		// TODO Auto-generated method stub
-		return null;
+	@Getter
+	@Setter
+	public LoginListener loginListener;
+	@Getter
+	@Setter
+	public GameListener gameListener;
+	@Getter
+	@Setter
+	public MinecraftProtocol protocol = null;
+	@Getter
+	@Setter
+	private TcpSession mcConnection;
+	
+	public JavaSession() {
+		
 	}
 
 	@Override
 	public void sendPacket(AbstractPacket pk) {
-		// TODO Auto-generated method stub
-
+		this.mcConnection.sendPacket(pk);
 	}
 
 	@Override
 	public void tick(int currentTick) {
-		// TODO Auto-generated method stub
-
+		while(this.mcConnection.receivePacket() != null) {
+			JavaPacket pk = (JavaPacket) this.mcConnection.receivePacket();
+			if(getProtocol() instanceof JavaProtocol) {
+				JavaProtocol protocol = (JavaProtocol)getProtocol();
+				if(protocol.getGameState() == JavaGameState.LOGIN) {
+					//to do login handler...
+				} else if(protocol.getGameState() == JavaGameState.GAME) {
+					getGameListener().receivePacket(pk);
+				}
+			}
+		}
 	}
 
 }
