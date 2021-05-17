@@ -29,12 +29,17 @@ public class BedrockSession implements GameSession {
 	public MinecraftProtocol protocol = null;
 	
 	private Connection connection;
+	private boolean authRequired;
 	
 	public BedrockSession(Connection connection) {
 		this.connection = connection;
 		if(this.protocol == null) {
 			this.protocol = new BedrockProtocol();
 		}
+	}
+	
+	public void requireAuthentication(boolean value) {
+		this.authRequired = value;
 	}
 	
 	public void tick(int currentTick) {

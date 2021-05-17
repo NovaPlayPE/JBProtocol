@@ -25,8 +25,14 @@ public class JavaSession implements GameSession {
 	@Setter
 	private TcpSession mcConnection;
 	
+	private boolean authRequired = false;
+	
 	public JavaSession() {
 		
+	}
+	
+	public void requireAuthentication(boolean value) {
+		this.authRequired = value;
 	}
 
 	@Override
