@@ -3,12 +3,16 @@ package net.novatech.jbprotocol;
 import java.lang.reflect.Constructor;
 import java.util.*;
 import lombok.Getter;
+import lombok.Setter;
 import net.novatech.jbprotocol.packet.AbstractPacket;
 
 public abstract class MinecraftProtocol {
 	
 	@Getter
 	public GameVersion gameVersion;
+	@Getter
+	@Setter
+	public int protocolVersion;
 	
 	public MinecraftProtocol() {
 	}
@@ -49,7 +53,7 @@ public abstract class MinecraftProtocol {
 		}
 	}
 	
-	public void registerCLientboundPacket(byte id, Class<? extends AbstractPacket> packetClass) {
+	public void registerClientboundPacket(byte id, Class<? extends AbstractPacket> packetClass) {
 		this.clientbound.put(id, packetClass);
 		this.clientboundPacket.put(packetClass, id);
 	}

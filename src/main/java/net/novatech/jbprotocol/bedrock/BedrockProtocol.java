@@ -8,6 +8,7 @@ public class BedrockProtocol extends MinecraftProtocol {
 	
 	public BedrockProtocol() {
 		this.gameVersion = GameVersion.BEDROCK;
+		setProtocolVersion(440);
 		registerPackets();
 	}
 	

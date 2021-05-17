@@ -12,6 +12,7 @@ public class JavaProtocol extends MinecraftProtocol {
 	
 	public JavaProtocol() {
 		this.gameVersion = GameVersion.JAVA;
+		setProtocolVersion(0x4000001B);
 	}
 	
 	public void registerPackets() {
