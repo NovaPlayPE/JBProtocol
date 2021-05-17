@@ -16,16 +16,26 @@ public class LoginPacket extends BedrockPacket{
 	
 	@Override
 	public void write(ByteBuf buf) throws Exception {
-		buf.writeInt(protocolVersion);
-		ByteBufUtils.writeUnsignedVarInt(buf, payload.length);
-		buf.writeBytes(payload);
+		buf.writeInt(this.protocolVersion);
+		ByteBufUtils.writeUnsignedVarInt(buf, this.payload.length);
+		buf.writeBytes(this.payload);
 	}
 
 	@Override
 	public void read(ByteBuf buf) throws Exception {
-		protocolVersion = buf.readInt();
-		payload = new byte[ByteBufUtils.readUnsignedVarInt(buf)];
-		buf.readBytes(payload);
+		this.protocolVersion = buf.readInt();
+		this.payload = new byte[ByteBufUtils.readUnsignedVarInt(buf)];
+		buf.readBytes(this.payload);
 		
+	}
+
+	@Override
+	public boolean isServerBound() {
+		return true;
+	}
+
+	@Override
+	public boolean isClientBound() {
+		return false;
 	}
 }

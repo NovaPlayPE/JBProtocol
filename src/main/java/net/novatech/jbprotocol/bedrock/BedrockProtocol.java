@@ -12,7 +12,7 @@ public class BedrockProtocol extends MinecraftProtocol {
 	}
 	
 	public void registerPackets() {
-		registerIncomingPacket((byte)0x01, LoginPacket.class);
+		this.registerServerboundPacket((byte)0x01, LoginPacket.class);
 	}
 	
 }

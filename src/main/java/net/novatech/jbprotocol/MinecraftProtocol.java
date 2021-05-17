@@ -14,16 +14,16 @@ public abstract class MinecraftProtocol {
 	}
 	
 	private HashMap<Byte, Class<? extends AbstractPacket>> general = new HashMap<Byte, Class<? extends AbstractPacket>>();
-	private HashMap<Byte, Class<? extends AbstractPacket>> incoming = new HashMap<Byte, Class<? extends AbstractPacket>>();
-	private HashMap<Byte, Class<? extends AbstractPacket>> outcoming = new HashMap<Byte, Class<? extends AbstractPacket>>();
+	private HashMap<Byte, Class<? extends AbstractPacket>> serverbound = new HashMap<Byte, Class<? extends AbstractPacket>>();
+	private HashMap<Byte, Class<? extends AbstractPacket>> clientbound = new HashMap<Byte, Class<? extends AbstractPacket>>();
 	
-	private HashMap<Class<? extends AbstractPacket>, Byte> outcomingPacket = new HashMap<Class<? extends AbstractPacket>, Byte>();
+	private HashMap<Class<? extends AbstractPacket>, Byte> clientboundPacket = new HashMap<Class<? extends AbstractPacket>, Byte>();
 	
 	public void registerPacket(byte id, Class<? extends AbstractPacket> packetClass) {
 		this.general.put(id, packetClass);
 		
-		registerIncomingPacket(id, packetClass);
-		registerOutcomingPacket(id, packetClass);
+		registerServerboundPacket(id, packetClass);
+		registerClientboundPacket(id, packetClass);
 	}
 	
 	public Class<? extends AbstractPacket> searchPacketClass(byte id){
@@ -40,22 +40,22 @@ public abstract class MinecraftProtocol {
 		return null;
 	}
 	
-	public void registerIncomingPacket(byte id, Class<? extends AbstractPacket> packetClass) {
-		this.incoming.put(id, packetClass);
+	public void registerServerboundPacket(byte id, Class<? extends AbstractPacket> packetClass) {
+		this.serverbound.put(id, packetClass);
 		try {
 			createIncoming(id);
 		} catch(IllegalStateException ex) {
-			this.incoming.remove(id);
+			this.serverbound.remove(id);
 		}
 	}
 	
-	public void registerOutcomingPacket(byte id, Class<? extends AbstractPacket> packetClass) {
-		this.outcoming.put(id, packetClass);
-		this.outcomingPacket.put(packetClass, id);
+	public void registerCLientboundPacket(byte id, Class<? extends AbstractPacket> packetClass) {
+		this.clientbound.put(id, packetClass);
+		this.clientboundPacket.put(packetClass, id);
 	}
 	
 	private AbstractPacket createIncoming(byte id) {
-		Class<? extends AbstractPacket> packetClass = incoming.get(id);
+		Class<? extends AbstractPacket> packetClass = clientbound.get(id);
 		if(packetClass == null) {
 			throw new NullPointerException("Packet is not registered");
 		}
