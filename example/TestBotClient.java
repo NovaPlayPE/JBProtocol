@@ -20,7 +20,7 @@ public class TestBotClient {
 		InetSocketAddress bindAddress = new InetSocketAddress("0.0.0.0", ThreadLocalRandom.current().nextInt(20000, 60000));
     	
 		ProtocolClient client = new ProtocolClient(bindAddress.getAddress().toString(), bindAddress.getPort(), GameVersion.BEDROCK);
-    	client.setClientListener(new ClientListener() {
+    		client.setClientListener(new ClientListener() {
 			@Override
 			public void sessionConnected(GameSession session) {
 				TestBotClient.this.session = session;
@@ -29,7 +29,7 @@ public class TestBotClient {
 					public void loginCompleted(SessionData data) {
 						System.out.println("Successfully connected to server");
 					}
-		    	});
+		    		});
 				session.setGameListener(new GameListener() {
 					@Override
 					public void receivePacket(AbstractPacket packet) {
@@ -37,14 +37,15 @@ public class TestBotClient {
 					}
 				});
 			}
+			
 			@Override
 			public void sessionDisconnected(GameSession session, String cause) {}
 
 			@Override
 			public void sessionFailed(GameSession session, String cause) {}
     		
-    	});
-    	client.connectTo(new ServerConnectInfo(targetAddress));
+    		});
+	    	client.connectTo(new ServerConnectInfo(targetAddress));
 	}
 	
 	public void sendPacketToThisUnknownServer(AbstractPacket packet) {
