@@ -2,6 +2,9 @@ package net.novatech.jbprotocol.java;
 
 import lombok.Getter;
 import net.novatech.jbprotocol.java.packets.*;
+import net.novatech.jbprotocol.java.packets.login.EncryptionResponsePacket;
+import net.novatech.jbprotocol.java.packets.login.LoginPluginResponsePacket;
+import net.novatech.jbprotocol.java.packets.login.LoginStartPacket;
 import net.novatech.jbprotocol.GameVersion;
 import net.novatech.jbprotocol.MinecraftProtocol;
 

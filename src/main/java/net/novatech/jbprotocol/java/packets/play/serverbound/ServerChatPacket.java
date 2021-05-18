@@ -1,20 +1,21 @@
-package net.novatech.jbprotocol.java.packets;
+package net.novatech.jbprotocol.java.packets.play.serverbound;
 
 import io.netty.buffer.ByteBuf;
+import net.novatech.jbprotocol.java.packets.JavaPacket;
 import net.novatech.library.utils.ByteBufUtils;
 
-public class LoginStartPacket extends JavaPacket {
-	
-	public String username;
+public class ServerChatPacket extends JavaPacket {
+
+	public String message = "";
 	
 	@Override
 	public void write(ByteBuf buf) throws Exception {
-		ByteBufUtils.writeString(buf,  this.username);
+		ByteBufUtils.writeString(buf, this.message);
 	}
 
 	@Override
 	public void read(ByteBuf buf) throws Exception {
-		this.username = ByteBufUtils.readString(buf);
+		this.message = ByteBufUtils.readString(buf);
 	}
 
 	@Override
@@ -29,7 +30,7 @@ public class LoginStartPacket extends JavaPacket {
 
 	@Override
 	public byte getId() {
-		return 0x00;
+		return 0x03;
 	}
 
 }
