@@ -22,7 +22,7 @@ public class EncryptionResponsePacket extends JavaPacket {
 		this.sharedKey = new byte[ByteBufUtils.readUnsignedVarInt(buf)];
 		buf.readBytes(this.sharedKey);
 		this.verifyToken = new byte[ByteBufUtils.readUnsignedVarInt(buf)];
-		buf.readBytes(this.verifyTokens);
+		buf.readBytes(this.verifyToken);
 	}
 
 	@Override

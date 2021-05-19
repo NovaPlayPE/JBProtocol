@@ -14,7 +14,7 @@ public class LoginPluginResponsePacket extends JavaPacket {
 		ByteBufUtils.writeUnsignedVarInt(buf, this.messageId);
 		if(this.payload != null) {
 			buf.writeBoolean(true);
-			ByteBufUtils.writeUnsignedVarInt(buf, this.payload);
+			ByteBufUtils.writeUnsignedVarInt(buf, this.payload.length);
 			buf.writeBytes(this.payload);
 		} else {
 			buf.writeBoolean(false);

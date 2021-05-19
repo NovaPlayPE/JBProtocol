@@ -23,6 +23,13 @@ public abstract class MinecraftProtocol {
 	
 	private HashMap<Class<? extends AbstractPacket>, Byte> clientboundPacket = new HashMap<Class<? extends AbstractPacket>, Byte>();
 	
+	public void clearAll() {
+		this.general.clear();
+		this.serverbound.clear();
+		this.clientbound.clear();
+		this.clientboundPacket.clear();
+	}
+	
 	public void registerPacket(byte id, Class<? extends AbstractPacket> packetClass) {
 		this.general.put(id, packetClass);
 		
