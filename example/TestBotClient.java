@@ -1,15 +1,16 @@
 import java.net.InetSocketAddress;
 import java.util.concurrent.ThreadLocalRandom;
 
-import net.novatech.protocol.GameSession;
-import net.novatech.protocol.GameVersion;
-import net.novatech.protocol.ProtocolClient;
-import net.novatech.protocol.ServerConnectInfo;
-import net.novatech.protocol.listener.ClientListener;
-import net.novatech.protocol.listener.GameListener;
-import net.novatech.protocol.listener.LoginListener;
-import net.novatech.protocol.packet.AbstractPacket;
-import net.novatech.protocol.util.SessionData;
+import net.novatech.jbprotocol.GameSession;
+import net.novatech.jbprotocol.GameVersion;
+import net.novatech.jbprotocol.ProtocolClient;
+import net.novatech.jbprotocol.ServerConnectInfo;
+import net.novatech.jbprotocol.bedrock.packets.*;
+import net.novatech.jbprotocol.listener.ClientListener;
+import net.novatech.jbprotocol.listener.GameListener;
+import net.novatech.jbprotocol.listener.LoginListener;
+import net.novatech.jbprotocol.packet.AbstractPacket;
+import net.novatech.jbprotocol.util.SessionData;
 
 public class TestBotClient {
 	
@@ -24,16 +25,13 @@ public class TestBotClient {
 			@Override
 			public void sessionConnected(GameSession session) {
 				TestBotClient.this.session = session;
-				session.setLoginListener(new LoginListener() {
-					@Override
-					public void loginCompleted(SessionData data) {
-						System.out.println("Successfully connected to server");
-					}
-		    		});
 				session.setGameListener(new GameListener() {
 					@Override
 					public void receivePacket(AbstractPacket packet) {
-						System.out.println("Received packet " + packet.toString());						
+						System.out.println("Received packet " + packet.toString());		
+						if(packet instanceof DissconnectPacket) {
+							
+						}
 					}
 				});
 			}

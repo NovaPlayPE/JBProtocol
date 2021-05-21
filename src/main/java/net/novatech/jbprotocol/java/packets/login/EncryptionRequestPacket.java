@@ -4,31 +4,34 @@ import io.netty.buffer.ByteBuf;
 import net.novatech.jbprotocol.java.packets.JavaPacket;
 import net.novatech.library.utils.ByteBufUtils;
 
-public class EncryptionResponsePacket extends JavaPacket {
-
-	public byte[] sharedKey;
+public class EncryptionRequestPacket extends JavaPacket {
+	
+	public String serverId;
+	public byte[] publicKey;
 	public byte[] verifyToken;
 	
 	@Override
 	public void write(ByteBuf buf) throws Exception {
-		ByteBufUtils.writeByteArray(buf, this.sharedKey);
+		ByteBufUtils.writeString(buf, this.serverId);
+		ByteBufUtils.writeByteArray(buf, this.publicKey);
 		ByteBufUtils.writeByteArray(buf, this.verifyToken);
 	}
 
 	@Override
 	public void read(ByteBuf buf) throws Exception {
-		this.sharedKey = ByteBufUtils.readByteArray(buf);
+		this.serverId = ByteBufUtils.readString(buf);
+		this.publicKey = ByteBufUtils.readByteArray(buf);
 		this.verifyToken = ByteBufUtils.readByteArray(buf);
 	}
 
 	@Override
 	public boolean isServerBound() {
-		return true;
+		return false;
 	}
 
 	@Override
 	public boolean isClientBound() {
-		return false;
+		return true;
 	}
 
 	@Override

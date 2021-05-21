@@ -9,9 +9,11 @@ import net.novatech.jbprotocol.GameSession;
 import net.novatech.jbprotocol.MinecraftProtocol;
 import net.novatech.jbprotocol.bedrock.packets.BedrockPacket;
 import net.novatech.jbprotocol.bedrock.packets.LoginPacket;
+import net.novatech.jbprotocol.bedrock.packets.PlayStatusPacket;
 import net.novatech.jbprotocol.listener.GameListener;
 import net.novatech.jbprotocol.listener.LoginListener;
 import net.novatech.jbprotocol.packet.AbstractPacket;
+import net.novatech.jbprotocol.util.SessionData;
 import net.novatech.library.utils.ByteBufUtils;
 import lombok.Getter;
 import lombok.Setter;
@@ -28,13 +30,19 @@ public class BedrockSession implements GameSession {
 	@Setter
 	public MinecraftProtocol protocol = null;
 	
+	private SessionData sessionData = null;
+	
 	private Connection connection;
 	private boolean authRequired;
 	
 	public BedrockSession(Connection connection) {
+		this(connection, false);
+	}
+	
+	public BedrockSession(Connection connection, boolean client) {
 		this.connection = connection;
 		if(this.protocol == null) {
-			this.protocol = new BedrockProtocol();
+			this.protocol = new BedrockProtocol(client);
 		}
 	}
 	
@@ -68,15 +76,36 @@ public class BedrockSession implements GameSession {
 		
 		BedrockPacket pk = (BedrockPacket) getProtocol().createPacket((byte)pid);
 		pk.read(pB.getBuffer());
-		
-		if(pk instanceof LoginPacket) {
-			LoginPacket login = (LoginPacket)pk;
-			BedrockSessionData data = new BedrockSessionData();
-			this.loginListener.loginCompleted(data);
+		this.receivePacket(pk);
+		return pid;
+	}
+	
+	private void receivePacket(AbstractPacket pk) {
+		if(!getProtocol().isClient()) {
+			if(pk instanceof LoginPacket) {
+				LoginPacket login = (LoginPacket)pk;
+				PlayStatusPacket playStatus = new PlayStatusPacket();
+				if(login.protocolVersion > getProtocol().getProtocolVersion()) {
+					playStatus.status = PlayStatusPacket.Status.FAILED_CLIENT;
+					sendPacket(playStatus);
+					return;
+				} else if (login.protocolVersion < getProtocol().getProtocolVersion()){
+					playStatus.status = PlayStatusPacket.Status.FAILED_SERVER;
+					sendPacket(playStatus);
+					return;
+				}
+				// handle login data
+				SessionData data = new BedrockSessionData();
+				
+				playStatus.status = PlayStatusPacket.Status.LOGIN_SUCCESS;
+				sendPacket(playStatus);
+				
+				this.loginListener.loginCompleted(data);
+				return;
+			}
 		}
 		
 		this.gameListener.receivePacket(pk);
-		return pid;
 	}
 
 	@Override

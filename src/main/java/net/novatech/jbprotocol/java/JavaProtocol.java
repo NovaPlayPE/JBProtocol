@@ -13,7 +13,8 @@ public class JavaProtocol extends MinecraftProtocol {
 	@Getter
 	public JavaGameState gameState = JavaGameState.HANDSHAKE;
 	
-	public JavaProtocol() {
+	public JavaProtocol(boolean client) {
+		super(client);
 		this.gameVersion = GameVersion.JAVA;
 		setProtocolVersion(0x4000001B);
 	}
@@ -38,6 +39,10 @@ public class JavaProtocol extends MinecraftProtocol {
 			this.registerServerboundPacket((byte)0x02, LoginPluginResponsePacket.class);
 			
 			this.registerClientboundPacket((byte)0x00, DissconnectPacket.class);
+			this.registerClientboundPacket((byte)0x01, EncryptionRequestPacket.class);
+			this.registerClientboundPacket((byte)0x02, LoginSuccessPacket.class);
+			this.registerClientboundPacket((byte)0x03, SetCompressionPacket.class);
+			this.registerClientboundPacket((byte)0x04, LoginPluginRequestPacket.class);
 		break;
 		}
 	}

@@ -1,39 +1,40 @@
 package net.novatech.jbprotocol.java.packets.login;
 
 import io.netty.buffer.ByteBuf;
+import java.util.UUID;
 import net.novatech.jbprotocol.java.packets.JavaPacket;
 import net.novatech.library.utils.ByteBufUtils;
 
-public class EncryptionResponsePacket extends JavaPacket {
+public class LoginSuccessPacket extends JavaPacket {
 
-	public byte[] sharedKey;
-	public byte[] verifyToken;
+	public UUID uuid;
+	public String username;
 	
 	@Override
 	public void write(ByteBuf buf) throws Exception {
-		ByteBufUtils.writeByteArray(buf, this.sharedKey);
-		ByteBufUtils.writeByteArray(buf, this.verifyToken);
+		ByteBufUtils.writeUUID(buf, this.uuid);
+		ByteBufUtils.writeString(buf, this.username);
 	}
 
 	@Override
 	public void read(ByteBuf buf) throws Exception {
-		this.sharedKey = ByteBufUtils.readByteArray(buf);
-		this.verifyToken = ByteBufUtils.readByteArray(buf);
+		this.uuid = ByteBufUtils.readUUID(buf);
+		this.username = ByteBufUtils.readString(buf);
 	}
 
 	@Override
 	public boolean isServerBound() {
-		return true;
-	}
-
-	@Override
-	public boolean isClientBound() {
 		return false;
 	}
 
 	@Override
+	public boolean isClientBound() {
+		return true;
+	}
+
+	@Override
 	public byte getId() {
-		return 0x01;
+		return 0x02;
 	}
 
 }

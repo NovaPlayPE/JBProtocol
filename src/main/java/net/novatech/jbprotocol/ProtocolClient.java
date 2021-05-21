@@ -74,7 +74,7 @@ public class ProtocolClient{
 
 			@Override
 			public void onSocketEvent(Socket socket, SocketEvent event) {
-				ProtocolClient.this.session = new BedrockSession(event.getConnection());
+				ProtocolClient.this.session = new BedrockSession(event.getConnection(), true);
 				switch(event.getType()) {
 				case CONNECTION_ATTEMPT_FAILED:
 					getClientListener().sessionFailed(ProtocolClient.this.session, "Session failed to connect: " + event.getReason());

@@ -4,36 +4,33 @@ import io.netty.buffer.ByteBuf;
 import net.novatech.jbprotocol.java.packets.JavaPacket;
 import net.novatech.library.utils.ByteBufUtils;
 
-public class EncryptionResponsePacket extends JavaPacket {
+public class SetCompressionPacket extends JavaPacket {
 
-	public byte[] sharedKey;
-	public byte[] verifyToken;
+	public int treshold;
 	
 	@Override
 	public void write(ByteBuf buf) throws Exception {
-		ByteBufUtils.writeByteArray(buf, this.sharedKey);
-		ByteBufUtils.writeByteArray(buf, this.verifyToken);
+		ByteBufUtils.writeUnsignedVarInt(buf, this.treshold);
 	}
 
 	@Override
 	public void read(ByteBuf buf) throws Exception {
-		this.sharedKey = ByteBufUtils.readByteArray(buf);
-		this.verifyToken = ByteBufUtils.readByteArray(buf);
+		this.treshold = ByteBufUtils.readUnsignedVarInt(buf);
 	}
 
 	@Override
 	public boolean isServerBound() {
-		return true;
-	}
-
-	@Override
-	public boolean isClientBound() {
 		return false;
 	}
 
 	@Override
+	public boolean isClientBound() {
+		return true;
+	}
+
+	@Override
 	public byte getId() {
-		return 0x01;
+		return 0x03;
 	}
 
 }

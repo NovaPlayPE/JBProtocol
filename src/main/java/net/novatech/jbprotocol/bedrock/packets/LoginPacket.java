@@ -17,15 +17,13 @@ public class LoginPacket extends BedrockPacket{
 	@Override
 	public void write(ByteBuf buf) throws Exception {
 		buf.writeInt(this.protocolVersion);
-		ByteBufUtils.writeUnsignedVarInt(buf, this.payload.length);
-		buf.writeBytes(this.payload);
+		ByteBufUtils.writeByteArray(buf, this.payload);
 	}
 
 	@Override
 	public void read(ByteBuf buf) throws Exception {
 		this.protocolVersion = buf.readInt();
-		this.payload = new byte[ByteBufUtils.readUnsignedVarInt(buf)];
-		buf.readBytes(this.payload);
+		this.payload = ByteBufUtils.readByteArray(buf);
 		
 	}
 

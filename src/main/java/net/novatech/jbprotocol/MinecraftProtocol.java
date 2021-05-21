@@ -13,8 +13,15 @@ public abstract class MinecraftProtocol {
 	@Getter
 	@Setter
 	public int protocolVersion;
+	@Getter
+	public boolean client;
 	
 	public MinecraftProtocol() {
+		this(false);
+	}
+	
+	public MinecraftProtocol(boolean client) {
+		this.client = client;
 	}
 	
 	private HashMap<Byte, Class<? extends AbstractPacket>> general = new HashMap<Byte, Class<? extends AbstractPacket>>();
@@ -38,7 +45,12 @@ public abstract class MinecraftProtocol {
 	}
 	
 	public Class<? extends AbstractPacket> searchPacketClass(byte id){
-		return this.general.get(id);
+		if(this.isClient()) {
+			return this.clientbound.get(id);
+		} else {
+			return this.serverbound.get(id);
+		}
+		
 	}
 	
 	public AbstractPacket createPacket(byte id) {
