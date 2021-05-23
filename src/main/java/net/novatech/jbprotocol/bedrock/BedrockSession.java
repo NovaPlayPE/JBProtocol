@@ -12,6 +12,8 @@ import net.novatech.jbprotocol.bedrock.packets.LoginPacket;
 import net.novatech.jbprotocol.bedrock.packets.PlayStatusPacket;
 import net.novatech.jbprotocol.listener.GameListener;
 import net.novatech.jbprotocol.listener.LoginListener;
+import net.novatech.jbprotocol.listener.LoginServerListener;
+import net.novatech.jbprotocol.listener.LoginClientListener;
 import net.novatech.jbprotocol.packet.AbstractPacket;
 import net.novatech.jbprotocol.util.SessionData;
 import net.novatech.library.utils.ByteBufUtils;
@@ -50,7 +52,7 @@ public class BedrockSession implements GameSession {
 		this.authRequired = value;
 	}
 	
-	public void tick(int currentTick) {
+	public void tick() {
 		while(this.connection.receive() != null) {
 			EncapsulatedPacket enc = this.connection.receive();
 			PacketBuffer pB = new PacketBuffer(enc.getPacketData());
@@ -61,7 +63,7 @@ public class BedrockSession implements GameSession {
 				int length = ByteBufUtils.readUnsignedVarInt(pB.getBuffer());
 				int pos = pB.getReadPosition();
 				try {
-					int id = handleBody(pB, length + pos, currentTick);
+					int id = handleBody(pB, length + pos);
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -70,7 +72,7 @@ public class BedrockSession implements GameSession {
 		}
 	}
 	
-	private int handleBody(PacketBuffer pB, int skipPos, int currentTick) throws Exception {
+	private int handleBody(PacketBuffer pB, int skipPos) throws Exception {
 		int raw = ByteBufUtils.readUnsignedVarInt(pB.getBuffer());
 		int pid = raw & 0x3FF;
 		
@@ -82,30 +84,38 @@ public class BedrockSession implements GameSession {
 	
 	private void receivePacket(AbstractPacket pk) {
 		if(!getProtocol().isClient()) {
-			if(pk instanceof LoginPacket) {
-				LoginPacket login = (LoginPacket)pk;
-				PlayStatusPacket playStatus = new PlayStatusPacket();
-				if(login.protocolVersion > getProtocol().getProtocolVersion()) {
-					playStatus.status = PlayStatusPacket.Status.FAILED_CLIENT;
-					sendPacket(playStatus);
-					return;
-				} else if (login.protocolVersion < getProtocol().getProtocolVersion()){
-					playStatus.status = PlayStatusPacket.Status.FAILED_SERVER;
-					sendPacket(playStatus);
-					return;
-				}
-				// handle login data
-				SessionData data = new BedrockSessionData();
-				
-				playStatus.status = PlayStatusPacket.Status.LOGIN_SUCCESS;
+			handleServerSidePacket(pk);
+		} else {
+			handleClientSidePacket(pk);
+		}
+		this.gameListener.receivePacket(pk);
+	}
+	
+	private void handleClientSidePacket(AbstractPacket pk) {
+		
+	}
+	
+	private void handleServerSidePacket(AbstractPacket pk) {
+		if(pk instanceof LoginPacket) {
+			LoginPacket login = (LoginPacket)pk;
+			PlayStatusPacket playStatus = new PlayStatusPacket();
+			if(login.protocolVersion > getProtocol().getProtocolVersion()) {
+				playStatus.status = PlayStatusPacket.Status.FAILED_CLIENT;
 				sendPacket(playStatus);
-				
-				this.loginListener.loginCompleted(data);
+				return;
+			} else if (login.protocolVersion < getProtocol().getProtocolVersion()){
+				playStatus.status = PlayStatusPacket.Status.FAILED_SERVER;
+				sendPacket(playStatus);
 				return;
 			}
+			// handle login data
+			SessionData data = new BedrockSessionData();
+			
+			playStatus.status = PlayStatusPacket.Status.LOGIN_SUCCESS;
+			sendPacket(playStatus);
+			LoginServerListener listener = (LoginServerListener)this.loginListener;
+			listener.loginCompleted(data);
 		}
-		
-		this.gameListener.receivePacket(pk);
 	}
 
 	@Override

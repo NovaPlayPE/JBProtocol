@@ -15,7 +15,7 @@ public interface GameSession {
 	MinecraftProtocol getProtocol();
 	
 	void sendPacket(AbstractPacket pk);
-	void tick(int currentTick);
+	void tick();
 	
 	void requireAuthentication(boolean auth);
 	

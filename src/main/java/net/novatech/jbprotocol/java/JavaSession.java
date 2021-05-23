@@ -6,8 +6,11 @@ import lombok.Setter;
 import net.novatech.jbprotocol.GameSession;
 import net.novatech.jbprotocol.MinecraftProtocol;
 import net.novatech.jbprotocol.java.packets.JavaPacket;
+import net.novatech.jbprotocol.java.packets.handshake.HandshakePacket;
 import net.novatech.jbprotocol.listener.GameListener;
 import net.novatech.jbprotocol.listener.LoginListener;
+import net.novatech.jbprotocol.listener.LoginServerListener;
+import net.novatech.jbprotocol.listener.LoginClientListener;
 import net.novatech.jbprotocol.packet.AbstractPacket;
 import net.novatech.jbprotocol.tcp.TcpSession;
 import net.novatech.library.utils.ByteBufUtils;
@@ -50,7 +53,7 @@ public class JavaSession implements GameSession {
 	}
 
 	@Override
-	public void tick(int currentTick) {
+	public void tick() {
 		while(this.mcConnection.receivePacket() != null) {
 			ByteBuf buf = this.mcConnection.receivePacket();
 			int id = ByteBufUtils.readUnsignedVarInt(buf);
@@ -64,11 +67,41 @@ public class JavaSession implements GameSession {
 				try {
 					pk.read(buf);
 				} catch (Exception e) {}
+				if(protocol.isClient()) {
+					handleClientPacket(pk, protocol);
+				} else {
+					handleServerPacket(pk, protocol);
+				}
 				if(protocol.getGameState() == JavaGameState.GAME) {
 					getGameListener().receivePacket(pk);
 				}
 			}
 		}
+	}
+	
+	private void handleServerPacket(AbstractPacket pk, JavaProtocol protocol) {
+		if(protocol.getGameState() == JavaGameState.HANDSHAKE) {
+			HandshakePacket handshake = (HandshakePacket)pk;
+			switch(handshake.state) {
+			case STATUS:
+				protocol.setGameState(JavaGameState.STATUS);
+				protocol.registerPackets();
+				break;
+			case LOGIN:
+				protocol.setGameState(JavaGameState.LOGIN);
+				protocol.registerPackets();
+				if(handshake.protocolVersion > protocol.getProtocolVersion()) {
+					this.mcConnection.disconnect("Could not connect: Outdated client!");
+				} else if(handshake.protocolVersion < protocol.getProtocolVersion()) {
+					this.mcConnection.disconnect("Could not connect: Outdated server!");
+				}
+				break;
+			}
+		}
+	}
+	
+	private void handleClientPacket(AbstractPacket pk, JavaProtocol protocol) {
+		
 	}
 
 }

@@ -3,6 +3,7 @@ package net.novatech.jbprotocol.tcp;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
+import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import net.novatech.jbprotocol.packet.AbstractPacket;
@@ -12,6 +13,7 @@ public abstract class TcpSession extends SimpleChannelInboundHandler<ByteBuf>{
 	
 	@Getter
 	protected Channel channel = null;
+	private boolean disconnected = false;
 	
 	protected ByteBuf caught = null;
 	
@@ -44,6 +46,22 @@ public abstract class TcpSession extends SimpleChannelInboundHandler<ByteBuf>{
 		if(!future.isSuccess()) {
 			System.out.println("Failed to write packet, reason: " + future.cause());
 		}
+	}
+	
+	public void disconnect(String reason) {
+		disconnect(reason, null);
+	}
+	
+	public void disconnect(String reason, Throwable cause) {
+		if(this.disconnected) return;
+		this.disconnected = true;
+		
+		if(this.channel != null && this.channel.isOpen()) {
+			this.channel.flush().close().addListener((ChannelFutureListener) future ->{
+				System.out.println("Connection closed: " + reason != null ? reason : cause);
+			});
+		}
+		this.channel = null;
 	}
 
 }

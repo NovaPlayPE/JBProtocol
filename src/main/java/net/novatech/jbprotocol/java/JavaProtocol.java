@@ -1,6 +1,7 @@
 package net.novatech.jbprotocol.java;
 
 import lombok.Getter;
+import lombok.Setter;
 import net.novatech.jbprotocol.java.packets.*;
 import net.novatech.jbprotocol.java.packets.handshake.HandshakePacket;
 import net.novatech.jbprotocol.java.packets.login.*;
@@ -11,6 +12,7 @@ import net.novatech.jbprotocol.MinecraftProtocol;
 public class JavaProtocol extends MinecraftProtocol {
 	
 	@Getter
+	@Setter
 	public JavaGameState gameState = JavaGameState.HANDSHAKE;
 	
 	public JavaProtocol(boolean client) {
