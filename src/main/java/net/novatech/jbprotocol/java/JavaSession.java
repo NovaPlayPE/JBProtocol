@@ -1,5 +1,6 @@
 package net.novatech.jbprotocol.java;
 
+import io.netty.buffer.ByteBuf;
 import lombok.Getter;
 import lombok.Setter;
 import net.novatech.jbprotocol.GameSession;
@@ -9,6 +10,7 @@ import net.novatech.jbprotocol.listener.GameListener;
 import net.novatech.jbprotocol.listener.LoginListener;
 import net.novatech.jbprotocol.packet.AbstractPacket;
 import net.novatech.jbprotocol.tcp.TcpSession;
+import net.novatech.library.utils.ByteBufUtils;
 
 public class JavaSession implements GameSession {
 
@@ -27,8 +29,15 @@ public class JavaSession implements GameSession {
 	
 	private boolean authRequired = false;
 	
-	public JavaSession() {
-		
+	public JavaSession(TcpSession mcConnection) {
+		this(mcConnection, false);
+	}
+	
+	public JavaSession(TcpSession mcConnection, boolean isClient) {
+		this.mcConnection = mcConnection;
+		if(this.protocol == null) {
+			this.protocol = new JavaProtocol(isClient);
+		}
 	}
 	
 	public void requireAuthentication(boolean value) {
@@ -43,12 +52,19 @@ public class JavaSession implements GameSession {
 	@Override
 	public void tick(int currentTick) {
 		while(this.mcConnection.receivePacket() != null) {
-			JavaPacket pk = (JavaPacket) this.mcConnection.receivePacket();
+			ByteBuf buf = this.mcConnection.receivePacket();
+			int id = ByteBufUtils.readUnsignedVarInt(buf);
 			if(getProtocol() instanceof JavaProtocol) {
 				JavaProtocol protocol = (JavaProtocol)getProtocol();
-				if(protocol.getGameState() == JavaGameState.LOGIN) {
-					//to do login handler...
-				} else if(protocol.getGameState() == JavaGameState.GAME) {
+				AbstractPacket packet = protocol.createPacket((byte)id);
+				if(packet == null) {
+					throw new NullPointerException("Packet with id " + id + " does not exist");
+				}
+				JavaPacket pk = (JavaPacket)packet;
+				try {
+					pk.read(buf);
+				} catch (Exception e) {}
+				if(protocol.getGameState() == JavaGameState.GAME) {
 					getGameListener().receivePacket(pk);
 				}
 			}

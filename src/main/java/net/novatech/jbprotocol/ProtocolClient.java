@@ -14,6 +14,7 @@ import net.novatech.jbprotocol.bedrock.BedrockSession;
 import net.novatech.jbprotocol.listener.ClientListener;
 import net.novatech.jbprotocol.packet.AbstractPacket;
 import net.novatech.jbprotocol.tcp.TcpClient;
+import net.novatech.jbprotocol.tcp.TcpSession;
 
 public class ProtocolClient{
 	
@@ -26,6 +27,7 @@ public class ProtocolClient{
 	@Getter
 	private ServerConnectInfo connectedServer = null;
 	@Getter
+	@Setter
 	private GameSession session;
 	@Getter
 	@Setter
@@ -63,7 +65,7 @@ public class ProtocolClient{
 	}
 	
 	private void createJavaConnection() {
-		TcpClient client = new TcpClient();
+		TcpClient client = new TcpClient(this);
 		client.initialize();
 		client.connect(getConnectedServer().getAddress());
 	}

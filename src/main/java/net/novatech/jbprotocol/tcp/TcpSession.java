@@ -1,23 +1,38 @@
 package net.novatech.jbprotocol.tcp;
 
+import io.netty.buffer.ByteBuf;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import net.novatech.jbprotocol.packet.AbstractPacket;
+import lombok.Getter;
 
-public class TcpSession extends SimpleChannelInboundHandler<AbstractPacket>{
-
-	private Channel channel = null;
+public abstract class TcpSession extends SimpleChannelInboundHandler<ByteBuf>{
 	
-	private AbstractPacket caught = null;
+	@Getter
+	protected Channel channel = null;
+	
+	protected ByteBuf caught = null;
 	
 	@Override
-	protected void channelRead0(ChannelHandlerContext ctx, AbstractPacket msg) throws Exception {
+	protected void channelRead0(ChannelHandlerContext ctx, ByteBuf msg) throws Exception {
 		this.caught = msg;
 	}
 	
-	public AbstractPacket receivePacket() {
+	@Override
+	public void channelActive(ChannelHandlerContext ctx) throws Exception {
+		
+	}
+	
+	@Override
+	public void channelInactive(ChannelHandlerContext ctx) throws Exception {
+		customChannelInactive(ctx);
+	}
+	
+	public abstract void customChannelInactive(ChannelHandlerContext ctx) throws Exception;
+	
+	public ByteBuf receivePacket() {
 		return this.caught;
 	}
 	

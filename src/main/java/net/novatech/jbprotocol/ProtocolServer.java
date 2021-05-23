@@ -11,6 +11,7 @@ import lombok.Getter;
 import lombok.Setter;
 import net.novatech.jbprotocol.bedrock.BedrockSession;
 import net.novatech.jbprotocol.listener.ServerListener;
+import net.novatech.jbprotocol.tcp.TcpServer;
 
 public class ProtocolServer {
 	
@@ -26,6 +27,9 @@ public class ProtocolServer {
 	@Setter
 	@Getter
 	private ServerListener serverListener;
+	
+	private TcpServer tcpServer;
+	private ServerSocket udpServer;
 	
 	public ProtocolServer(InetSocketAddress address, GameVersion protocolType) {
 		this(address.getAddress().toString(), address.getPort(), protocolType);
@@ -47,13 +51,26 @@ public class ProtocolServer {
 		}
 	}
 	
+	public void close() {
+		switch(this.gameProtocol) {
+		case JAVA:
+			this.tcpServer.close();
+			break;
+		case BEDROCK:
+			this.udpServer.close();
+			break;
+		}
+	}
+	
 	private void bindJava() {
-		
+		this.tcpServer = new TcpServer(this);
+		tcpServer.initialize();
+		tcpServer.bind();
 	}
 	
 	private void bindBedrock() {
-		ServerSocket socket = new ServerSocket(getMaxConnections());
-		socket.setEventHandler(new SocketEventHandler() {
+		this.udpServer = new ServerSocket(getMaxConnections());
+		udpServer.setEventHandler(new SocketEventHandler() {
 			@Override
 			public void onSocketEvent(Socket socket, SocketEvent event) {
 				BedrockSession session = new BedrockSession(event.getConnection());
@@ -72,7 +89,7 @@ public class ProtocolServer {
 			
 		});
 		try {
-			socket.bind(getHost(), getPort());
+			udpServer.bind(getHost(), getPort());
 		} catch (SocketException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
