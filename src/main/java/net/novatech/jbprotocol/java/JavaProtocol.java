@@ -6,7 +6,7 @@ import net.novatech.jbprotocol.java.packets.*;
 import net.novatech.jbprotocol.java.packets.handshake.HandshakePacket;
 import net.novatech.jbprotocol.java.packets.login.*;
 import net.novatech.jbprotocol.java.packets.status.*;
-import net.novatech.jbprotocol.GameVersion;
+import net.novatech.jbprotocol.GameEdition;
 import net.novatech.jbprotocol.MinecraftProtocol;
 
 public class JavaProtocol extends MinecraftProtocol {
@@ -17,7 +17,7 @@ public class JavaProtocol extends MinecraftProtocol {
 	
 	public JavaProtocol(boolean client) {
 		super(client);
-		this.gameVersion = GameVersion.JAVA;
+		this.gameVersion = GameEdition.JAVA;
 		setProtocolVersion(0x4000001B);
 	}
 	

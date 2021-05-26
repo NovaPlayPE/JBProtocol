@@ -2,12 +2,17 @@ package net.novatech.jbprotocol;
 
 import java.net.InetSocketAddress;
 import java.net.SocketException;
+import java.util.concurrent.TimeUnit;
 
 import io.gomint.jraknet.ClientSocket;
 import io.gomint.jraknet.Connection;
 import io.gomint.jraknet.Socket;
 import io.gomint.jraknet.SocketEvent;
 import io.gomint.jraknet.SocketEventHandler;
+import io.netty.channel.EventLoopGroup;
+import io.netty.channel.epoll.Epoll;
+import io.netty.channel.epoll.EpollEventLoopGroup;
+import io.netty.channel.nio.NioEventLoopGroup;
 import lombok.Getter;
 import lombok.Setter;
 import net.novatech.jbprotocol.bedrock.BedrockSession;
@@ -23,7 +28,7 @@ public class ProtocolClient{
 	@Getter
 	private int port;
 	@Getter
-	private GameVersion gameProtocol;
+	private GameEdition gameProtocol;
 	@Getter
 	private ServerConnectInfo connectedServer = null;
 	@Getter
@@ -32,15 +37,19 @@ public class ProtocolClient{
 	@Getter
 	@Setter
 	private ClientListener clientListener;
+	final EventLoopGroup eventLoop;
 	
-	public ProtocolClient(InetSocketAddress address, GameVersion protocolType) {
+	public ProtocolClient(InetSocketAddress address, GameEdition protocolType) {
 		this(address.getAddress().toString(), address.getPort(), protocolType);
 	}
 	
-	public ProtocolClient(String host, int port, GameVersion protocolType) {
+	public ProtocolClient(String host, int port, GameEdition protocolType) {
 		this.host = host;
 		this.port = port;
 		this.gameProtocol = protocolType;
+		this.eventLoop = Epoll.isAvailable() ? new EpollEventLoopGroup(0, r -> {return new Thread(r, "ProtocolClient");}) 
+				: new NioEventLoopGroup(0, r -> {return new Thread(r, "ProtocolClient");});
+		this.eventLoop.scheduleAtFixedRate(this::tick, 50, 50, TimeUnit.MILLISECONDS);
 	}
 	
 	public void connectTo(ServerConnectInfo info) {
@@ -51,6 +60,12 @@ public class ProtocolClient{
 	
 	public void sendPacket(AbstractPacket packet) {
 		this.getSession().sendPacket(packet);
+	}
+	
+	public void tick() {
+		if(getSession() != null) {
+			getSession().tick();
+		}
 	}
 	
 	private void handleConnection() {

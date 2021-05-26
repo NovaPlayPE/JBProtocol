@@ -20,7 +20,7 @@ public class ProtocolServer {
 	@Getter
 	private int port;
 	@Getter
-	private GameVersion gameProtocol;
+	private GameEdition gameProtocol;
 	@Getter
 	@Setter
 	private int maxConnections;
@@ -31,11 +31,11 @@ public class ProtocolServer {
 	private TcpServer tcpServer;
 	private ServerSocket udpServer;
 	
-	public ProtocolServer(InetSocketAddress address, GameVersion protocolType) {
+	public ProtocolServer(InetSocketAddress address, GameEdition protocolType) {
 		this(address.getAddress().toString(), address.getPort(), protocolType);
 	}
 	
-	public ProtocolServer(String host, int port, GameVersion protocolType) {
+	public ProtocolServer(String host, int port, GameEdition protocolType) {
 		this.host = host;
 		this.port = port;
 		this.gameProtocol = protocolType;

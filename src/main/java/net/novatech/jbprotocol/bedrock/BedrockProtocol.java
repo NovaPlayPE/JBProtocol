@@ -1,6 +1,6 @@
 package net.novatech.jbprotocol.bedrock;
 
-import net.novatech.jbprotocol.GameVersion;
+import net.novatech.jbprotocol.GameEdition;
 import net.novatech.jbprotocol.MinecraftProtocol;
 import net.novatech.jbprotocol.bedrock.packets.*;
 
@@ -8,7 +8,7 @@ public class BedrockProtocol extends MinecraftProtocol {
 	
 	public BedrockProtocol(boolean client) {
 		super(client);
-		this.gameVersion = GameVersion.BEDROCK;
+		this.gameVersion = GameEdition.BEDROCK;
 		setProtocolVersion(440);
 		registerPackets();
 	}

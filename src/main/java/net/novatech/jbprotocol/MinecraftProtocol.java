@@ -9,7 +9,7 @@ import net.novatech.jbprotocol.packet.AbstractPacket;
 public abstract class MinecraftProtocol {
 	
 	@Getter
-	public GameVersion gameVersion;
+	public GameEdition gameVersion;
 	@Getter
 	@Setter
 	public int protocolVersion;
