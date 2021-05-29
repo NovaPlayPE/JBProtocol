@@ -10,14 +10,14 @@ import net.novatech.library.math.Vector3d;
 import net.novatech.library.math.Vector3f;
 import net.novatech.library.utils.ByteBufUtils;
 
-public class SpawnEntityPacket extends JavaPacket {
-	
+public class SpawnEntityLivingPacket extends JavaPacket {
+
 	public int id;
 	public UUID uuid;
 	public int type;
 	public Vector3d position;
 	public Rotation rotation;
-	public int data;
+	public float headYaw;
 	public Vector3f motion;
 
 	@Override
@@ -27,7 +27,7 @@ public class SpawnEntityPacket extends JavaPacket {
 		ByteBufUtils.writeUnsignedVarInt(buf, this.type);
 		PacketHelper.writeVector3d(buf, this.position);
 		PacketHelper.writeRotation2(buf, this.rotation);
-		buf.writeInt(this.data);
+		buf.writeFloat(this.headYaw);
 		PacketHelper.writeVector3f(buf, this.motion);
 	}
 
@@ -38,7 +38,7 @@ public class SpawnEntityPacket extends JavaPacket {
 		this.type = ByteBufUtils.readUnsignedVarInt(buf);
 		this.position = PacketHelper.readVector3d(buf);
 		this.rotation = PacketHelper.readRotation2(buf);
-		this.data = buf.readInt();
+		this.headYaw = buf.readFloat();
 		this.motion = PacketHelper.readVector3f(buf);
 	}
 
@@ -54,7 +54,7 @@ public class SpawnEntityPacket extends JavaPacket {
 
 	@Override
 	public byte getId() {
-		return 0x00;
+		return 0x02;
 	}
 
 }
