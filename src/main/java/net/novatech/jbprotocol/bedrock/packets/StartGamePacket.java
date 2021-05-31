@@ -1,5 +1,6 @@
 package net.novatech.jbprotocol.bedrock.packets;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import io.netty.buffer.ByteBuf;
@@ -36,10 +37,36 @@ public class StartGamePacket extends BedrockPacket {
 	public boolean lanBroadcast;
 	public int xboxBroadcastMode;
 	public int platformBroadcastMode;
+	public boolean commandsEnabled;
+	public boolean texturePackRequiered;
 	public Map<String, Map<Integer, Object>> gameRules;
 	public boolean bonusChest;
 	public boolean hasStartWithMapEnabled;
 	public int permissionLevel;
+	public int chunkTickRate;
+	public boolean behaviourLocked;
+	public boolean resourcesLocked;
+	public boolean isWorldLockedTemplate;
+	public boolean onlyMsaGamertags;
+	public boolean isWorldTemplate;
+	public boolean isWorldOptionTemplate;
+	public boolean enableV1Villagers;
+	public String gameVersion;
+	public int limitedWorldWidth;
+	public int limitedWorldHeight;
+	public boolean isNetherType;
+	public boolean isForceExperimental;
+	public String levelId;
+	public String worldName;
+	public String premiumWorldTemplateId;
+	public boolean isTrial;
+	public int movementType;
+	public int movementRewindSize;
+	public boolean authoritativeBlockBreaking;
+	public long currentTick;
+	public int enchantmentSeed;
+	public String multiplayerCollerilationId;
+	public boolean authoritativeServerInventories;
 	
 	
 	@Override
@@ -69,6 +96,8 @@ public class StartGamePacket extends BedrockPacket {
 		buf.writeBoolean(this.lanBroadcast);
 		ByteBufUtils.writeUnsignedVarInt(buf, this.xboxBroadcastMode);
 		ByteBufUtils.writeUnsignedVarInt(buf, this.platformBroadcastMode);
+		buf.writeBoolean(this.commandsEnabled);
+		buf.writeBoolean(this.texturePackRequiered);
 		ByteBufUtils.writeUnsignedVarInt(buf, this.gameRules.size());
 		for(Map.Entry<String, Map<Integer, Object>> gamerule : this.gameRules.entrySet()) {
 			ByteBufUtils.writeString(buf, gamerule.getKey());
@@ -90,12 +119,112 @@ public class StartGamePacket extends BedrockPacket {
 		buf.writeBoolean(this.bonusChest);
 		buf.writeBoolean(this.hasStartWithMapEnabled);
 		ByteBufUtils.writeSignedVarInt(buf, this.permissionLevel);
+		buf.writeInt(this.chunkTickRate);
+		buf.writeBoolean(this.behaviourLocked);
+		buf.writeBoolean(this.resourcesLocked);
+		buf.writeBoolean(this.isWorldLockedTemplate);
+		buf.writeBoolean(this.onlyMsaGamertags);
+		buf.writeBoolean(this.isWorldTemplate);
+		buf.writeBoolean(this.isWorldOptionTemplate);
+		buf.writeBoolean(this.enableV1Villagers);
+		ByteBufUtils.writeString(buf, this.gameVersion);
+		buf.writeInt(this.limitedWorldWidth);
+		buf.writeInt(this.limitedWorldHeight);
+		buf.writeBoolean(this.isNetherType);
+		buf.writeBoolean(this.isForceExperimental);
+		ByteBufUtils.writeString(buf, this.levelId);
+		ByteBufUtils.writeString(buf, this.worldName);
+		ByteBufUtils.writeString(buf, this.premiumWorldTemplateId);
+		buf.writeBoolean(this.isTrial);
+		ByteBufUtils.writeUnsignedVarInt(buf, this.movementType);
+		buf.writeInt(this.movementRewindSize);
+		buf.writeBoolean(this.authoritativeBlockBreaking);
+		buf.writeLongLE(this.currentTick);
+		ByteBufUtils.writeSignedVarInt(buf, this.enchantmentSeed);
+		//todo: block properties and item states
+		ByteBufUtils.writeString(buf, this.multiplayerCollerilationId);
+		buf.writeBoolean(this.authoritativeServerInventories);
 	}
 
 	@Override
 	public void read(ByteBuf buf) throws Exception {
-		// TODO Auto-generated method stub
+		this.entityUniqueId = ByteBufUtils.readSignedVarInt(buf);
+		this.entityRuntimeId = ByteBufUtils.readUnsignedVarInt(buf);
+		this.gamemode = ByteBufUtils.readSignedVarInt(buf);
+		this.spawn = PacketHelper.readVector3f(buf);
+		this.rotation = PacketHelper.readRotation2(buf);
+		this.seed = ByteBufUtils.readSignedVarInt(buf);
+		this.biomeType = buf.readShort();
+		this.biomeName = ByteBufUtils.readString(buf);
+		this.dimension = ByteBufUtils.readSignedVarInt(buf);
+		this.generator = ByteBufUtils.readSignedVarInt(buf);
+		this.worldGamemode = ByteBufUtils.readSignedVarInt(buf);
+		this.difficulty = ByteBufUtils.readSignedVarInt(buf);
+		this.worldSpawn = PacketHelper.readVector3i(buf);
+		this.achievmentsDisabled = buf.readBoolean();
+		this.dayCycle = ByteBufUtils.readSignedVarInt(buf);
+		this.eduOffer = ByteBufUtils.readSignedVarInt(buf);
+		this.eduEnabled = buf.readBoolean();
+		this.eduId = ByteBufUtils.readString(buf);
+		this.rainLevel = buf.readFloat();
+		this.lightningLevel = buf.readFloat();
+		this.hasConfirmedPlatformLockedContent = buf.readBoolean();
+		this.isMultiplayer = buf.readBoolean();
+		this.lanBroadcast = buf.readBoolean();
+		this.xboxBroadcastMode = ByteBufUtils.readUnsignedVarInt(buf);
+		this.platformBroadcastMode = ByteBufUtils.readUnsignedVarInt(buf);
+		this.commandsEnabled = buf.readBoolean();
+		this.texturePackRequiered = buf.readBoolean();
+		
+		Map<String, Map<Integer,Object>> grules = new HashMap<>();
+		int length = ByteBufUtils.readUnsignedVarInt(buf);
+		for(int i = 0; i < length; i++) {
+			String gameRule = ByteBufUtils.readString(buf);
+			Map<Integer, Object> gameruleData = new HashMap<Integer, Object>();
+			int type = ByteBufUtils.readUnsignedVarInt(buf);
+			switch(type) {
+			case 1:
+				gameruleData.put(type, buf.readBoolean());
+				break;
+			case 2:
+				gameruleData.put(type, ByteBufUtils.readUnsignedVarInt(buf));
+				break;
+			case 3:
+				gameruleData.put(type, buf.readFloatLE());
+				break;
+			}
+			grules.put(gameRule, gameruleData);
+		}
+		this.gameRules = grules;
 
+		this.bonusChest = buf.readBoolean();
+		this.hasStartWithMapEnabled = buf.readBoolean();
+		this.permissionLevel = ByteBufUtils.readSignedVarInt(buf);
+		this.chunkTickRate = buf.readInt();
+		this.behaviourLocked = buf.readBoolean();
+		this.resourcesLocked = buf.readBoolean();
+		this.isWorldLockedTemplate = buf.readBoolean();
+		this.onlyMsaGamertags = buf.readBoolean();
+		this.isWorldTemplate = buf.readBoolean();
+		this.isWorldOptionTemplate = buf.readBoolean();
+		this.enableV1Villagers = buf.readBoolean();
+		this.gameVersion = ByteBufUtils.readString(buf);
+		this.limitedWorldWidth = buf.readInt();
+		this.limitedWorldHeight = buf.readInt();
+		this.isNetherType = buf.readBoolean();
+		this.isForceExperimental = buf.readBoolean();
+		this.levelId = ByteBufUtils.readString(buf);
+		this.worldName = ByteBufUtils.readString(buf);
+		this.premiumWorldTemplateId = ByteBufUtils.readString(buf);
+		this.isTrial = buf.readBoolean();
+		this.movementType = ByteBufUtils.readUnsignedVarInt(buf);
+		this.movementRewindSize = buf.readInt();
+		this.authoritativeBlockBreaking = buf.readBoolean();
+		this.currentTick = buf.readLongLE();
+		this.enchantmentSeed = ByteBufUtils.readSignedVarInt(buf);
+		// todo: block properties and item states
+		this.multiplayerCollerilationId = ByteBufUtils.readString(buf);
+		this.authoritativeServerInventories = buf.readBoolean();
 	}
 
 	@Override
