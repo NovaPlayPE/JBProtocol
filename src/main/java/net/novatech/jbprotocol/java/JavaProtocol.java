@@ -6,6 +6,8 @@ import net.novatech.jbprotocol.java.packets.*;
 import net.novatech.jbprotocol.java.packets.handshake.HandshakePacket;
 import net.novatech.jbprotocol.java.packets.login.*;
 import net.novatech.jbprotocol.java.packets.status.*;
+import net.novatech.jbprotocol.java.packets.play.serverbound.*;
+import net.novatech.jbprotocol.java.packets.play.clientbound.*;
 import net.novatech.jbprotocol.GameEdition;
 import net.novatech.jbprotocol.MinecraftProtocol;
 
@@ -45,6 +47,20 @@ public class JavaProtocol extends MinecraftProtocol {
 			this.registerClientboundPacket((byte)0x02, LoginSuccessPacket.class);
 			this.registerClientboundPacket((byte)0x03, SetCompressionPacket.class);
 			this.registerClientboundPacket((byte)0x04, LoginPluginRequestPacket.class);
+		break;
+		case GAME:
+			//clientbound
+			this.registerClientboundPacket((byte)0x00, SpawnEntityPacket.class);
+			this.registerClientboundPacket((byte)0x01, SpawnOrbExperiencePacket.class);
+			this.registerClientboundPacket((byte)0x02, SpawnEntityLivingPacket.class);
+			this.registerClientboundPacket((byte)0x03, SpawnPaintingPacket.class);
+			this.registerClientboundPacket((byte)0x04, SpawnPlayerPacket.class);
+			this.registerClientboundPacket((byte)0x05, ClientEntityAnimationPacket.class);
+			
+			this.registerClientboundPacket((byte)0x0E, ClientChatPacket.class);
+			
+			//serverbound
+			this.registerServerboundPacket((byte)0x03, ServerChatPacket.class);
 		break;
 		}
 	}
