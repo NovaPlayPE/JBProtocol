@@ -14,8 +14,8 @@ public class AddActorPacket extends BedrockPacket {
 	public Vector3f position;
 	public Vector3f motion;
 	public Rotation rotation;
-	public float headYaw = 0F; // normally it should bi in Rotation, but our Rotation is nor two dimensional
-	//other things are uncomplete
+	public float headYaw = 0F; // normally it should be in Rotation, but our Rotation is not two dimensional
+	//other things are incomplete
 	
 	@Override
 	public void write(ByteBuf buf) throws Exception {
