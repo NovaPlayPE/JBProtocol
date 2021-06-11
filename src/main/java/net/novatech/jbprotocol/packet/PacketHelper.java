@@ -8,6 +8,23 @@ import net.novatech.library.math.Vector3i;
 
 public class PacketHelper {
 	
+	public static void writePosition(ByteBuf buf, Vector3i position) {
+		long x = position.getX() & 0x3FFFFFF;
+		long y = position.getY() & 0xFFF;
+		long z = position.getZ() & 0x3FFFFFF;
+		
+		buf.writeLong(x << 38 | z << 12 | y);
+	}
+	
+	public static Vector3i readPosition(ByteBuf buf) {
+		long value = buf.readLong();
+		int x = (int) (value >> 38);
+		int y = (int) (value & 0xFFF);
+		int z = (int) (value << 26 >> 38);
+		
+		return new Vector3i(x,y,z);
+	}
+	
 	public static void writeVector3d(ByteBuf buf, Vector3d vec) {
 		buf.writeDouble(vec.getX());
 		buf.writeDouble(vec.getY());

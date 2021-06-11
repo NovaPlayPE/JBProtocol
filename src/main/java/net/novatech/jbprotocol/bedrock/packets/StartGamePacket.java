@@ -67,6 +67,7 @@ public class StartGamePacket extends BedrockPacket {
 	public int enchantmentSeed;
 	public String multiplayerCollerilationId;
 	public boolean authoritativeServerInventories;
+	public String serverEngine;
 	
 	
 	@Override
@@ -102,6 +103,7 @@ public class StartGamePacket extends BedrockPacket {
 		for(Map.Entry<String, Map<Integer, Object>> gamerule : this.gameRules.entrySet()) {
 			ByteBufUtils.writeString(buf, gamerule.getKey());
 			for(Map.Entry<Integer, Object> gameruleData : gamerule.getValue().entrySet()) {
+				buf.writeBoolean(false);
 				ByteBufUtils.writeUnsignedVarInt(buf, gameruleData.getKey());
 				switch(gameruleData.getKey()) {
 				case 1:
@@ -144,6 +146,7 @@ public class StartGamePacket extends BedrockPacket {
 		//todo: block properties and item states
 		ByteBufUtils.writeString(buf, this.multiplayerCollerilationId);
 		buf.writeBoolean(this.authoritativeServerInventories);
+		ByteBufUtils.writeString(buf, this.serverEngine);
 	}
 
 	@Override
@@ -181,6 +184,7 @@ public class StartGamePacket extends BedrockPacket {
 		for(int i = 0; i < length; i++) {
 			String gameRule = ByteBufUtils.readString(buf);
 			Map<Integer, Object> gameruleData = new HashMap<Integer, Object>();
+			buf.readBoolean();
 			int type = ByteBufUtils.readUnsignedVarInt(buf);
 			switch(type) {
 			case 1:
@@ -225,6 +229,7 @@ public class StartGamePacket extends BedrockPacket {
 		// todo: block properties and item states
 		this.multiplayerCollerilationId = ByteBufUtils.readString(buf);
 		this.authoritativeServerInventories = buf.readBoolean();
+		this.serverEngine = ByteBufUtils.readString(buf);
 	}
 
 	@Override

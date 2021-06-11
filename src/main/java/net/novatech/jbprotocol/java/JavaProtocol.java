@@ -55,8 +55,9 @@ public class JavaProtocol extends MinecraftProtocol {
 			this.registerClientboundPacket((byte)0x02, SpawnEntityLivingPacket.class);
 			this.registerClientboundPacket((byte)0x03, SpawnPaintingPacket.class);
 			this.registerClientboundPacket((byte)0x04, SpawnPlayerPacket.class);
-			this.registerClientboundPacket((byte)0x05, ClientEntityAnimationPacket.class);
-			
+			this.registerClientboundPacket((byte)0x06, SculkVibrationPacket.class);
+			this.registerClientboundPacket((byte)0x06, ClientEntityAnimationPacket.class);
+			this.registerClientboundPacket((byte)0x08, AcknowledgePlayerDiggingPacket.class);
 			this.registerClientboundPacket((byte)0x0E, ClientChatPacket.class);
 			
 			//serverbound

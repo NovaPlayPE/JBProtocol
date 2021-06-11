@@ -33,7 +33,7 @@ public class ClientEntityAnimationPacket extends JavaPacket {
 
 	@Override
 	public byte getId() {
-		return 0x05;
+		return 0x06;
 	}
 
 }

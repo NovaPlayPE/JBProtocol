@@ -4,6 +4,7 @@ import java.util.UUID;
 
 import io.netty.buffer.ByteBuf;
 import net.novatech.jbprotocol.java.packets.JavaPacket;
+import net.novatech.jbprotocol.packet.PacketHelper;
 import net.novatech.library.math.Vector3i;
 import net.novatech.library.utils.ByteBufUtils;
 
@@ -20,12 +21,7 @@ public class SpawnPaintingPacket extends JavaPacket {
 		ByteBufUtils.writeUnsignedVarInt(buf, this.id);
 		ByteBufUtils.writeUUID(buf, this.uuid);
 		ByteBufUtils.writeUnsignedVarInt(buf, this.motive);
-		
-		long x = position.getX() & 0x3FFFFFF;
-		long y = position.getY() & 0xFFF;
-		long z = position.getZ() & 0x3FFFFFF;
-		
-		buf.writeLong(x << 38 | z << 12 | y);
+		PacketHelper.writePosition(buf, this.position);
 		buf.writeByte(this.direction);
 	}
 
@@ -34,13 +30,7 @@ public class SpawnPaintingPacket extends JavaPacket {
 		this.id = ByteBufUtils.readUnsignedVarInt(buf);
 		this.uuid = ByteBufUtils.readUUID(buf);
 		this.motive = ByteBufUtils.readUnsignedVarInt(buf);
-		
-		long value = buf.readLong();
-		int x = (int) (value >> 38);
-		int y = (int) (value & 0xFFF);
-		int z = (int) (value << 26 >> 38);
-		
-		this.position = new Vector3i(x,y,z);
+		this.position = PacketHelper.readPosition(buf);
 		this.direction = buf.readByte();
 	}
 
