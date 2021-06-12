@@ -9,7 +9,9 @@ import net.novatech.jbprotocol.packet.AbstractPacket;
 public abstract class MinecraftProtocol {
 	
 	@Getter
-	public GameEdition gameVersion;
+	public GameEdition gameEdition;
+	@Getter
+	protected String gameVersion;
 	@Getter
 	@Setter
 	public int protocolVersion;
@@ -78,7 +80,7 @@ public abstract class MinecraftProtocol {
 	}
 	
 	private AbstractPacket createIncoming(byte id) {
-		Class<? extends AbstractPacket> packetClass = clientbound.get(id);
+		Class<? extends AbstractPacket> packetClass = this.serverbound.get(id);
 		if(packetClass == null) {
 			throw new NullPointerException("Packet is not registered");
 		}
