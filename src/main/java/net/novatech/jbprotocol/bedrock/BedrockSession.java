@@ -10,6 +10,7 @@ import net.novatech.jbprotocol.MinecraftProtocol;
 import net.novatech.jbprotocol.bedrock.packets.BedrockPacket;
 import net.novatech.jbprotocol.bedrock.packets.LoginPacket;
 import net.novatech.jbprotocol.bedrock.packets.PlayStatusPacket;
+import net.novatech.jbprotocol.bedrock.packets.util.ChainData;
 import net.novatech.jbprotocol.listener.GameListener;
 import net.novatech.jbprotocol.listener.LoginListener;
 import net.novatech.jbprotocol.listener.LoginServerListener;
@@ -109,7 +110,9 @@ public class BedrockSession implements GameSession {
 				return;
 			}
 			// handle login data
-			SessionData data = new BedrockSessionData();
+			byte[] payload = login.payload;
+			ChainData chainHandler = new ChainData(payload);
+			SessionData data = chainHandler.getSessionData();
 			
 			playStatus.status = PlayStatusPacket.Status.LOGIN_SUCCESS;
 			sendPacket(playStatus);
