@@ -1,10 +1,9 @@
-package net.novatech.jbprotocol.java.packets.play.clientbound;
+package net.novatech.jbprotocol.bedrock.packets;
 
 import io.netty.buffer.ByteBuf;
-import net.novatech.jbprotocol.java.packets.JavaPacket;
 import net.novatech.jbprotocol.util.Chunk;
 
-public class ChunkDataPacket extends JavaPacket {
+public class LevelChunkPacket extends BedrockPacket {
 	
 	public Chunk chunk;
 	
@@ -30,7 +29,7 @@ public class ChunkDataPacket extends JavaPacket {
 
 	@Override
 	public byte getId() {
-		return 0x20;
+		return 0x3A;
 	}
 
 }
