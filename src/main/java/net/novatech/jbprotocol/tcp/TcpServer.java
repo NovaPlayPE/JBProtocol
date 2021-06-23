@@ -73,4 +73,10 @@ public class TcpServer {
 		return null;
 	}
 	
+	public void tick() {
+		for(JavaSession session : sessions) {
+			session.tick();
+		}
+	}
+	
 }
