@@ -31,6 +31,7 @@ public class BedrockProtocol extends MinecraftProtocol {
 		this.registerClientboundPacket((byte)0x0E, RemoveActorPacket.class);
 		
 		this.registerClientboundPacket((byte)0x3A, LevelChunkPacket.class);
+		this.registerClientboundPacket((byte)0x4A, BossEventPacket.class);
 	}
 	
 }
