@@ -64,7 +64,7 @@ public class ClientChatPacket extends JavaPacket {
 
 	@Override
 	public byte getId() {
-		return 0x0E;
+		return 0x0F;
 	}
 
 }
