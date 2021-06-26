@@ -4,41 +4,45 @@ import io.netty.buffer.ByteBuf;
 import net.novatech.jbprotocol.packet.PacketHelper;
 import net.novatech.library.math.Rotation;
 import net.novatech.library.math.Vector3f;
+import net.novatech.library.utils.BitsUtils;
 import net.novatech.library.utils.ByteBufUtils;
 
-public class AddActorPacket extends BedrockPacket {
+public class MoveActorAbsolutePacket extends BedrockPacket {
 	
-	public long uniqueId;
 	public long runtimeId;
-	public String type;
+	public byte flags;
 	public Vector3f position;
-	public Vector3f motion;
 	public Rotation rotation;
-	//other things are incomplete
+	public boolean onGround;
+	public boolean teleported;
 	
 	@Override
 	public void write(ByteBuf buf) throws Exception {
-		ByteBufUtils.writeSignedVarLong(buf, this.uniqueId);
 		ByteBufUtils.writeUnsignedVarLong(buf, this.runtimeId);
-		ByteBufUtils.writeString(buf, this.type);
+		if(this.onGround) {
+			this.flags = BitsUtils.addValue(this.flags, (byte)0x01);
+		}
+		if(this.teleported) {
+			this.flags = BitsUtils.addValue(this.flags, (byte)0x02);
+		}
+		buf.writeByte(this.flags);
 		PacketHelper.writeVector3f(buf, this.position);
-		PacketHelper.writeVector3f(buf, this.motion);
 		PacketHelper.writeRotation2(buf, this.rotation);
 	}
 
 	@Override
 	public void read(ByteBuf buf) throws Exception {
-		this.uniqueId = ByteBufUtils.readSignedVarLong(buf);
-		this.runtimeId = ByteBufUtils.readUnsignedVarLong(buf);
-		this.type = ByteBufUtils.readString(buf);
+		this.runtimeId = ByteBufUtils.readUnsignedVarInt(buf);
+		this.flags = buf.readByte();
+		this.onGround = BitsUtils.checkValue(this.flags, (byte)0x01);
+		this.teleported = BitsUtils.checkValue(this.flags, (byte)0x02);
 		this.position = PacketHelper.readVector3f(buf);
-		this.motion = PacketHelper.readVector3f(buf);
 		this.rotation = PacketHelper.readRotation2(buf);
 	}
 
 	@Override
 	public boolean isServerBound() {
-		return false;
+		return true;
 	}
 
 	@Override
@@ -48,7 +52,7 @@ public class AddActorPacket extends BedrockPacket {
 
 	@Override
 	public byte getId() {
-		return 0x0D;
+		return 0x12;
 	}
 
 }

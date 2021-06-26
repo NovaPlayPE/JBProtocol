@@ -78,12 +78,16 @@ public class PacketHelper {
 	public static void writeRotation2(ByteBuf buf, Rotation rotation) {
 		buf.writeFloat(rotation.getPitch());
 		buf.writeFloat(rotation.getYaw());
+		buf.writeFloat(rotation.getHeadYaw());
 	}
 	
 	public static Rotation readRotation2(ByteBuf buf) {
 		float pitch = buf.readFloat();
 		float yaw = buf.readFloat();
-		return new Rotation(yaw, pitch);
+		float headYaw = buf.readFloat();
+		Rotation rot = new Rotation(yaw, pitch);
+		rot.setHeadYaw(headYaw);
+		return rot;
 	}
 	
 }

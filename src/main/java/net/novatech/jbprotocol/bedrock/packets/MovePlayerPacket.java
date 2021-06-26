@@ -6,39 +6,57 @@ import net.novatech.library.math.Rotation;
 import net.novatech.library.math.Vector3f;
 import net.novatech.library.utils.ByteBufUtils;
 
-public class AddActorPacket extends BedrockPacket {
+public class MovePlayerPacket extends BedrockPacket {
 	
-	public long uniqueId;
+	public enum Mode {
+		NORMAL, RESET, TELEPORT, ROTATION;
+	}
+	
+	public enum TeleportationCause {
+		UNKNOWN, PROJECTILE, CHORUS, COMMAND, BEHAVIOR;
+	}
+	
 	public long runtimeId;
-	public String type;
 	public Vector3f position;
-	public Vector3f motion;
 	public Rotation rotation;
-	//other things are incomplete
+	public Mode mode;
+	public boolean onGround;
+	public float ridingEntityRuntimeId;
+	public TeleportationCause cause;
+	public byte entityType;
+	
 	
 	@Override
 	public void write(ByteBuf buf) throws Exception {
-		ByteBufUtils.writeSignedVarLong(buf, this.uniqueId);
 		ByteBufUtils.writeUnsignedVarLong(buf, this.runtimeId);
-		ByteBufUtils.writeString(buf, this.type);
 		PacketHelper.writeVector3f(buf, this.position);
-		PacketHelper.writeVector3f(buf, this.motion);
 		PacketHelper.writeRotation2(buf, this.rotation);
+		buf.writeByte(this.mode.ordinal());
+		buf.writeBoolean(this.onGround);
+		buf.writeFloat(this.ridingEntityRuntimeId);
+		if(this.mode == Mode.TELEPORT) {
+			ByteBufUtils.writeUnsignedVarLong(buf, this.cause.ordinal());
+			buf.writeByte(this.entityType);
+		}
 	}
 
 	@Override
 	public void read(ByteBuf buf) throws Exception {
-		this.uniqueId = ByteBufUtils.readSignedVarLong(buf);
 		this.runtimeId = ByteBufUtils.readUnsignedVarLong(buf);
-		this.type = ByteBufUtils.readString(buf);
 		this.position = PacketHelper.readVector3f(buf);
-		this.motion = PacketHelper.readVector3f(buf);
 		this.rotation = PacketHelper.readRotation2(buf);
+		this.mode = Mode.values()[buf.readByte()];
+		this.onGround = buf.readBoolean();
+		this.ridingEntityRuntimeId = buf.readFloat();
+		if(this.mode == Mode.TELEPORT) {
+			this.cause = TeleportationCause.values()[ByteBufUtils.readUnsignedVarInt(buf)];
+			this.entityType = buf.readByte();
+		}
 	}
 
 	@Override
 	public boolean isServerBound() {
-		return false;
+		return true;
 	}
 
 	@Override
@@ -48,7 +66,7 @@ public class AddActorPacket extends BedrockPacket {
 
 	@Override
 	public byte getId() {
-		return 0x0D;
+		return 0x13;
 	}
 
 }
