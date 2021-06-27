@@ -49,10 +49,24 @@ public class ChainData {
 				String xuid = obj.getString("XUID");
 				getSessionData().setUsername(username);
 				getSessionData().setUuid(uuid);
+				getSessionData().setXuid(xuid);
+			}
+			if(chainMap.has("identityPublicKey")) {
+				String publicKey = chainMap.getString("identityPublicKey");
 			}
 		}
-		
 		//skin data
+		
+		byte[] stringRawSkinData = new byte[buf.getInt()];
+		buf.get(stringRawSkinData);
+		String stringSkinData = new String(stringRawSkinData);
+		JSONObject skinData = decodeToken(stringSkinData);
+		if(skinData == null) {
+			return;
+		}
+		getSessionData().setGuiScale(skinData.getInt("GuiScale"));
+		getSessionData().setDeviceOS(skinData.getInt("DeviceOS"));
+		getSessionData().setDeviceID(skinData.getString("DeviceId"));
 	}
 	
 	private boolean isAuthed(JSONArray chains) {

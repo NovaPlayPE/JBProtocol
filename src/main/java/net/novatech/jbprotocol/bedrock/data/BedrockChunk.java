@@ -1,4 +1,4 @@
-package net.novatech.jbprotocol.bedrock.packets.util;
+package net.novatech.jbprotocol.bedrock.data;
 
 import java.util.ArrayList;
 
