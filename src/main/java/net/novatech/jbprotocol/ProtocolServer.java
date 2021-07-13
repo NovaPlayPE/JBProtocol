@@ -66,12 +66,8 @@ public class ProtocolServer {
 	
 	public void close() {
 		switch(this.gameProtocol) {
-		case JAVA:
-			this.tcpServer.close();
-			break;
-		case BEDROCK:
-			this.udpServer.close();
-			break;
+		case JAVA -> this.tcpServer.close();
+		case BEDROCK -> this.udpServer.close();
 		}
 	}
 	

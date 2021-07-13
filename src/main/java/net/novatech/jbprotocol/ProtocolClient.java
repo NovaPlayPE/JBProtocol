@@ -70,12 +70,8 @@ public class ProtocolClient{
 	
 	private void handleConnection() {
 		switch(gameProtocol) {
-		case BEDROCK:
-			createBedrockConnection();
-			break;
-		case JAVA:
-			createJavaConnection();
-			break;
+		case BEDROCK -> createBedrockConnection();
+		case JAVA -> createJavaConnection();
 		}
 	}
 	
