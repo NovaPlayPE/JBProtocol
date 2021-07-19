@@ -32,8 +32,8 @@ public class BedrockSession implements GameSession {
 	@Getter
 	@Setter
 	public MinecraftProtocol protocol = null;
-	
-	private SessionData sessionData = null;
+	@Getter
+	private BedrockSessionData sessionData = null;
 	
 	private Connection connection;
 	private boolean authRequired;
@@ -47,6 +47,8 @@ public class BedrockSession implements GameSession {
 		if(this.protocol == null) {
 			this.protocol = new BedrockProtocol(client);
 		}
+		this.sessionData = new BedrockSessionData();
+		this.sessionData.setAddress(this.connection.getAddress());
 	}
 	
 	public void requireAuthentication(boolean value) {
@@ -112,12 +114,12 @@ public class BedrockSession implements GameSession {
 			// handle login data
 			byte[] payload = login.payload;
 			ChainData chainHandler = new ChainData(payload);
-			SessionData data = chainHandler.getSessionData();
+			this.sessionData = chainHandler.getSessionData();
 			
 			playStatus.status = PlayStatusPacket.Status.LOGIN_SUCCESS;
 			sendPacket(playStatus);
 			LoginServerListener listener = (LoginServerListener)this.loginListener;
-			listener.loginCompleted(data);
+			listener.loginCompleted(getSessionData());
 		}
 	}
 

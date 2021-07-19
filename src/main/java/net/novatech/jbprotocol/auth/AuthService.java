@@ -3,6 +3,10 @@ package net.novatech.jbprotocol.auth;
 import java.io.IOException;
 import java.net.URL;
 
+import org.json.JSONObject;
+
+import com.google.gson.Gson;
+
 import net.novatech.library.utils.NetworkUtils;
 
 public abstract class AuthService {
@@ -22,5 +26,20 @@ public abstract class AuthService {
 	public static URL MICROSOFT_CODE_TOKEN_ENDPOINT = NetworkUtils.toURL("https://login.microsoftonline.com/consumers/oauth2/v2.0/token");
 	
 	public abstract AuthSession authenticate() throws IOException;
+	
+	public static String doRequest(URL url, Object payload) {
+		try {
+			if(payload == null) {
+				return NetworkUtils.doGet(url);
+			} else {
+				if(payload instanceof JSONObject) {
+					return NetworkUtils.doPost(url,((JSONObject)payload).toString(), "application/json");
+				}
+				return NetworkUtils.doPost(url, payload instanceof String ? (String) payload : new Gson().toJson(payload), "application/json");
+			}
+		} catch(IOException ex) {
+			return null;
+		}
+	}
 	
 }

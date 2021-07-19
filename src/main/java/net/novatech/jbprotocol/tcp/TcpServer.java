@@ -9,6 +9,9 @@ import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
+import io.netty.handler.timeout.ReadTimeoutHandler;
+
+import java.net.InetSocketAddress;
 import java.util.*;
 
 public class TcpServer {
@@ -29,9 +32,13 @@ public class TcpServer {
 				.childHandler(new ChannelInitializer<Channel>() {
 					public void initChannel(Channel channel) {
 						TcpSession nettySession = new TcpServerSession(TcpServer.this);
+						nettySession.setAddress((InetSocketAddress) channel.remoteAddress());
 						JavaSession session = new JavaSession(nettySession);
 						
-						channel.config().setOption(ChannelOption.TCP_NODELAY, false);
+						channel.config().setOption(ChannelOption.TCP_NODELAY, true);
+						channel.pipeline().addLast("timeout", new ReadTimeoutHandler(30));
+						channel.pipeline().addLast("splitter", new TcpPacketSizer());
+						channel.pipeline().addLast("prepender", new TcpPacketPrepender());
 						channel.pipeline().addLast("encoder", new TcpPacketEncoder());
 						channel.pipeline().addLast("decoder", new TcpPacketDecoder());
 						channel.pipeline().addLast("session", nettySession);

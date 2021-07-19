@@ -10,10 +10,17 @@ public class GameProfile {
 	public UUID uuid;
 	@Getter
 	public String username;
+	@Getter
+	public Property[] properties;
 	
 	public GameProfile(@NonNull UUID uuid, @NonNull String username) {
+		this(uuid, username, null);
+	}
+	
+	public GameProfile(@NonNull UUID uuid, @NonNull String username, Property[] properties) {
 		this.uuid = uuid;
 		this.username = username;
+		this.properties = properties;
 	}
 	
 }

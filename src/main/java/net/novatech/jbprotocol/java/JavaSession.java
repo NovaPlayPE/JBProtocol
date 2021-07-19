@@ -1,18 +1,37 @@
 package net.novatech.jbprotocol.java;
 
+import java.nio.charset.StandardCharsets;
+import java.security.NoSuchAlgorithmException;
+import java.security.PrivateKey;
+import java.security.spec.InvalidKeySpecException;
+import java.util.Random;
+import java.util.UUID;
+
+import javax.crypto.SecretKey;
+import javax.xml.crypto.Data;
+
 import io.netty.buffer.ByteBuf;
 import lombok.Getter;
 import lombok.Setter;
 import net.novatech.jbprotocol.GameSession;
 import net.novatech.jbprotocol.MinecraftProtocol;
+import net.novatech.jbprotocol.auth.GameProfile;
+import net.novatech.jbprotocol.auth.SessionHandler;
 import net.novatech.jbprotocol.java.packets.JavaPacket;
 import net.novatech.jbprotocol.java.packets.handshake.HandshakePacket;
+import net.novatech.jbprotocol.java.packets.login.EncryptionRequestPacket;
+import net.novatech.jbprotocol.java.packets.login.EncryptionResponsePacket;
+import net.novatech.jbprotocol.java.packets.login.LoginStartPacket;
+import net.novatech.jbprotocol.java.packets.login.LoginSuccessPacket;
+import net.novatech.jbprotocol.java.packets.login.SetCompressionPacket;
 import net.novatech.jbprotocol.listener.GameListener;
 import net.novatech.jbprotocol.listener.LoginListener;
 import net.novatech.jbprotocol.listener.LoginServerListener;
 import net.novatech.jbprotocol.listener.LoginClientListener;
 import net.novatech.jbprotocol.packet.AbstractPacket;
 import net.novatech.jbprotocol.tcp.TcpSession;
+import net.novatech.jbprotocol.util.CryptUtils;
+import net.novatech.jbprotocol.util.SessionData;
 import net.novatech.library.utils.ByteBufUtils;
 
 public class JavaSession implements GameSession {
@@ -30,7 +49,12 @@ public class JavaSession implements GameSession {
 	@Setter
 	private TcpSession mcConnection;
 	
+	private byte[] verifyToken = new byte[4];
+	
 	private boolean authRequired = false;
+	
+	@Getter
+	private JavaSessionData sessionData;
 	
 	public JavaSession(TcpSession mcConnection) {
 		this(mcConnection, false);
@@ -41,6 +65,11 @@ public class JavaSession implements GameSession {
 		if(this.protocol == null) {
 			this.protocol = new JavaProtocol(isClient);
 		}
+		Random rand = new Random();
+		rand.nextBytes(this.verifyToken);
+		
+		this.sessionData = new JavaSessionData();
+		this.sessionData.setAddress(this.mcConnection.getAddress());
 	}
 	
 	public void requireAuthentication(boolean value) {
@@ -97,11 +126,69 @@ public class JavaSession implements GameSession {
 				}
 				break;
 			}
+		} else if(protocol.getGameState() == JavaGameState.LOGIN) {
+			if(pk instanceof LoginStartPacket) {
+				LoginStartPacket login = (LoginStartPacket)pk;
+				this.sessionData.setUsername(login.username);
+				if(!this.authRequired) {
+					LoginSuccessPacket pk1 = new LoginSuccessPacket();
+					sessionData.setUuid(UUID.nameUUIDFromBytes(("OfflinePlayer:"+login.username).getBytes(StandardCharsets.UTF_8)));
+					
+					pk1.uuid = sessionData.getUuid();
+					pk1.username = sessionData.getUsername();
+					this.sendPacket(pk1);
+					protocol.setGameState(JavaGameState.GAME);
+					protocol.registerPackets();
+					
+					LoginServerListener listener = (LoginServerListener)this.getLoginListener();
+					listener.loginCompleted(this.sessionData);
+					return;
+				}
+				EncryptionRequestPacket encrypt = new EncryptionRequestPacket();
+				encrypt.publicKey = CryptUtils.JAVA_KEY.getPublic().getEncoded();
+				encrypt.verifyToken = this.verifyToken;
+				this.sendPacket(encrypt);
+			} else if(pk instanceof EncryptionResponsePacket) {
+				EncryptionResponsePacket encrypt = (EncryptionResponsePacket)pk;
+				PrivateKey pKey = CryptUtils.JAVA_KEY.getPrivate();
+				
+				SecretKey sKey = CryptUtils.secretFromShared(pKey, encrypt.sharedKey);
+				this.getMcConnection().setSecretKey(sKey);
+				this.getMcConnection().updateSecretKey();
+				
+				authPlayer(sKey, protocol);
+			}
 		}
 	}
 	
-	private void handleClientPacket(AbstractPacket pk, JavaProtocol protocol) {
+	private synchronized void authPlayer(SecretKey sKey, JavaProtocol protocol) {
+		String serverId = CryptUtils.generateServerId(sKey, CryptUtils.JAVA_KEY.getPublic());
+		if(SessionHandler.getProfile(this.sessionData.getUsername(), serverId) != null) {
+			GameProfile profile = SessionHandler.getProfile(this.sessionData.getUsername(), serverId);
+			this.sessionData.setUuid(profile.getUuid());
+			if(this.getMcConnection().getCompressionTreshold() >= 0) {
+				SetCompressionPacket pk = new SetCompressionPacket();
+				pk.treshold = this.getMcConnection().getCompressionTreshold();
+				this.sendPacket(pk);
+				this.getMcConnection().setCompressionTreshold(this.getMcConnection().getCompressionTreshold());
+				this.getMcConnection().updateCompressionTreshold();
+			}
+			
+			LoginSuccessPacket success = new LoginSuccessPacket();
+			success.username = sessionData.getUsername();
+			success.uuid = sessionData.getUuid();
+			this.sendPacket(success);
+			protocol.setGameState(JavaGameState.GAME);
+			protocol.registerPackets();
+			
+			LoginServerListener listener = (LoginServerListener)this.getLoginListener();
+			listener.loginCompleted(sessionData);
+		}
 		
+	}
+	
+	private void handleClientPacket(AbstractPacket pk, JavaProtocol protocol) {
+
 	}
 
 }

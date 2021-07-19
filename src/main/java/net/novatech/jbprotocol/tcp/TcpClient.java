@@ -8,6 +8,7 @@ import io.netty.channel.Channel;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
 import io.netty.channel.socket.nio.NioSocketChannel;
+import io.netty.handler.timeout.ReadTimeoutHandler;
 import lombok.Getter;
 
 public class TcpClient {
@@ -26,9 +27,17 @@ public class TcpClient {
 				.handler(new ChannelInitializer<Channel>() {
 					public void initChannel(Channel channel) {
 						TcpSession nettySession = new TcpClientSession(TcpClient.this);
+						nettySession.setAddress((InetSocketAddress) channel.localAddress());
+						
 						JavaSession session = new JavaSession(nettySession, true);
 						channel.config().setOption(ChannelOption.TCP_NODELAY, false);
+						channel.config().setOption(ChannelOption.CONNECT_TIMEOUT_MILLIS, 30);
 						
+						channel.pipeline().addLast("timeout", new ReadTimeoutHandler(30));
+						channel.pipeline().addLast("splitter", new TcpPacketSizer());
+						channel.pipeline().addLast("prepender", new TcpPacketPrepender());
+						channel.pipeline().addLast("encoder", new TcpPacketEncoder());
+						channel.pipeline().addLast("decoder", new TcpPacketEncoder());
 						channel.pipeline().addLast("session", nettySession);
 						
 						mainClient.setSession(session);
