@@ -57,6 +57,7 @@ public class ProtocolServer {
 	public void bind() {
 		switch(this.gameProtocol) {
 		case JAVA:
+			bindJava();
 			break;
 		case BEDROCK:
 			bindBedrock();
