@@ -1,22 +1,29 @@
 package net.novatech.jbprotocol.bedrock;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import io.gomint.jraknet.Connection;
 import io.gomint.jraknet.EncapsulatedPacket;
 import io.gomint.jraknet.PacketBuffer;
 import io.gomint.jraknet.PacketReliability;
 import io.gomint.jraknet.SocketEvent;
+import io.netty.buffer.ByteBuf;
 import net.novatech.jbprotocol.GameSession;
 import net.novatech.jbprotocol.MinecraftProtocol;
 import net.novatech.jbprotocol.bedrock.packets.BedrockPacket;
 import net.novatech.jbprotocol.bedrock.packets.LoginPacket;
 import net.novatech.jbprotocol.bedrock.packets.PlayStatusPacket;
+import net.novatech.jbprotocol.bedrock.packets.Wrapper;
 import net.novatech.jbprotocol.bedrock.packets.util.ChainData;
 import net.novatech.jbprotocol.listener.GameListener;
 import net.novatech.jbprotocol.listener.LoginListener;
 import net.novatech.jbprotocol.listener.LoginServerListener;
 import net.novatech.jbprotocol.listener.LoginClientListener;
 import net.novatech.jbprotocol.packet.AbstractPacket;
+import net.novatech.jbprotocol.packet.PacketHelper;
 import net.novatech.jbprotocol.util.SessionData;
+import net.novatech.library.crypto.Processor;
 import net.novatech.library.utils.ByteBufUtils;
 import lombok.Getter;
 import lombok.Setter;
@@ -38,12 +45,31 @@ public class BedrockSession implements GameSession {
 	private Connection connection;
 	private boolean authRequired;
 	
+	public Processor outputProcess = new Processor(true);
+	public Processor inputProcess = new Processor(false);
+	
 	public BedrockSession(Connection connection) {
 		this(connection, false);
 	}
 	
 	public BedrockSession(Connection connection, boolean client) {
 		this.connection = connection;
+		this.connection.addDataProcessor(encapsulated -> {
+			if(encapsulated.getPacketData().readableBytes() <= 0) {
+				return encapsulated;
+			}
+			
+			byte pid = encapsulated.getPacketData().readByte();
+			if(pid == (byte)0xFF) {
+				ByteBuf pure = receiveBatch(encapsulated.getPacketData());
+				EncapsulatedPacket newPk = new EncapsulatedPacket();
+				newPk.setPacketData(pure);
+				pure.release();
+				return newPk;
+			}
+			encapsulated.getPacketData().readerIndex(0);
+			return encapsulated;
+		});
 		if(this.protocol == null) {
 			this.protocol = new BedrockProtocol(client);
 		}
@@ -56,22 +82,36 @@ public class BedrockSession implements GameSession {
 	}
 	
 	public void tick() {
+		List<PacketBuffer> pBs = null;
+		
 		while(this.connection.receive() != null) {
 			EncapsulatedPacket enc = this.connection.receive();
 			PacketBuffer pB = new PacketBuffer(enc.getPacketData());
+			if(pBs == null) {
+				pBs = new ArrayList<PacketBuffer>();
+			}
+			pBs.add(pB);
 			enc.release();
 			
-			if(pB.getRemaining() <= 0) return;
-			while(pB.getRemaining() > 0) {
-				int length = ByteBufUtils.readUnsignedVarInt(pB.getBuffer());
-				int pos = pB.getReadPosition();
-				try {
-					int id = handleBody(pB, length + pos);
-				} catch (Exception e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+			if(pBs != null) {
+				for(PacketBuffer buf : pBs) {
+					try {
+						if(buf.getRemaining() <= 0) return;
+						while(pB.getRemaining() > 0) {
+							int length = ByteBufUtils.readUnsignedVarInt(buf.getBuffer());
+							int pos = buf.getReadPosition();
+							try {
+								int id = handleBody(buf, length + pos);
+							} catch (Exception e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+						}
+					} catch(Exception ex) {}
 				}
 			}
+			
+			
 		}
 	}
 	
@@ -79,10 +119,22 @@ public class BedrockSession implements GameSession {
 		int raw = ByteBufUtils.readUnsignedVarInt(pB.getBuffer());
 		int pid = raw & 0x3FF;
 		
+		if(pid == 0xFF) {
+			return pid;
+		}
+		
 		BedrockPacket pk = (BedrockPacket) getProtocol().createPacket((byte)pid);
+		if(pk == null) {
+			pB.setReadPosition(skipPos);
+			return pid;
+		}
 		pk.read(pB.getBuffer());
 		this.receivePacket(pk);
 		return pid;
+	}
+	
+	private ByteBuf receiveBatch(ByteBuf payload) {
+		return this.inputProcess.process(payload);
 	}
 	
 	private void receivePacket(AbstractPacket pk) {
@@ -126,20 +178,26 @@ public class BedrockSession implements GameSession {
 	@Override
 	public void sendPacket(AbstractPacket pk) {
 		if(pk instanceof BedrockPacket) {
-			PacketBuffer pB = new PacketBuffer(64);
-			try {
-				ByteBufUtils.writeUnsignedVarInt(pB.getBuffer(), pk.getId());
-				pk.write(pB.getBuffer());
-				this.connection.send(PacketReliability.RELIABLE_ORDERED, pB);
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+			if(pk instanceof Wrapper){
+				PacketBuffer pB = new PacketBuffer(64);
+				try {
+					ByteBufUtils.writeUnsignedVarInt(pB.getBuffer(), pk.getId());
+					pk.write(pB.getBuffer());
+					this.connection.send(PacketReliability.RELIABLE_ORDERED, pB);
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			} else {
+				PacketHelper.writeBatchPacket(this, new BedrockPacket[] {(BedrockPacket)pk});
 			}
 			
 		} else {
 			throw new IllegalArgumentException("Packet must override BedrockPacket, but given " + pk.getClass().getName());
 		}
 	}
+	
+	
 	
 	
 

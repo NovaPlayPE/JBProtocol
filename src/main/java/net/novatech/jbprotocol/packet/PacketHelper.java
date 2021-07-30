@@ -1,12 +1,28 @@
 package net.novatech.jbprotocol.packet;
 
+import io.gomint.jraknet.PacketBuffer;
 import io.netty.buffer.ByteBuf;
+import net.novatech.jbprotocol.bedrock.BedrockSession;
+import net.novatech.jbprotocol.bedrock.packets.BedrockPacket;
+import net.novatech.jbprotocol.bedrock.packets.Wrapper;
 import net.novatech.library.math.Rotation;
 import net.novatech.library.math.Vector3d;
 import net.novatech.library.math.Vector3f;
 import net.novatech.library.math.Vector3i;
+import net.novatech.library.utils.ByteBufUtils;
 
 public class PacketHelper {
+	
+	public static void writeBatchPacket(BedrockSession session, BedrockPacket[] packets) {
+		ByteBuf buf = convertPacketsToBytes(packets);
+		if(buf.readableBytes() == 0) {
+			buf.release();
+			return;
+		}
+		Wrapper wrapper = new Wrapper();
+		wrapper.payload = session.outputProcess.process(buf);
+		session.sendPacket(wrapper);
+	}
 	
 	public static void writePosition(ByteBuf buf, Vector3i position) {
 		long x = position.getX() & 0x3FFFFFF;
@@ -88,6 +104,34 @@ public class PacketHelper {
 		Rotation rot = new Rotation(yaw, pitch);
 		rot.setHeadYaw(headYaw);
 		return rot;
+	}
+	
+	private static ByteBuf convertPacketsToBytes(BedrockPacket[] packets) {
+		PacketBuffer buffer = new PacketBuffer(packets.length * 5 * (packets.length * 32));
+		int pos;
+		for(BedrockPacket pk : packets) {
+			try {
+				int length = buffer.getWritePosition();
+				buffer.writeBytes(new byte[] {(byte)0x80, (byte)0x80, (byte)0x80, (byte)0x80, (byte)0x0});
+				pos = buffer.getWritePosition();
+				
+				ByteBufUtils.writeUnsignedVarInt(buffer.getBuffer(), pk.getId());
+				pk.write(buffer.getBuffer());
+				
+				int writtenBytes = buffer.getWritePosition() - pos;
+				writePrimitiveVarInt(length, writtenBytes, buffer.getBuffer());
+			} catch (Exception ex) {}
+		}
+		return buffer.getBuffer();
+	}
+	
+	private static void  writePrimitiveVarInt(int start, int value, ByteBuf buffer) {
+		int current = start;
+		while((value & -128) != 0) {
+			buffer.setByte(current++, value & 0x7F | 0x80);
+			value >>>= 7;
+		}
+		buffer.setByte(current, value | 0x80);
 	}
 	
 }
