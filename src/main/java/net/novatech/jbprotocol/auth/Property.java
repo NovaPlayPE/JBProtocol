@@ -44,4 +44,16 @@ public class Property{
 		return properties;
 	}
 	
+	public static JSONArray serialize(Property[] properties){
+		JSONArray array = new JSONArray();
+		
+		for(Property property : properties) {
+			JSONObject obj = new JSONObject();
+			obj.put("name", property.getProperty());
+			obj.put("value", property.getValue());
+			array.put(obj);
+		}
+		return array;
+	}
+	
 }

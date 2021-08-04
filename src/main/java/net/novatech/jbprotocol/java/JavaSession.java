@@ -15,8 +15,10 @@ import lombok.Getter;
 import lombok.Setter;
 import net.novatech.jbprotocol.GameSession;
 import net.novatech.jbprotocol.MinecraftProtocol;
+import net.novatech.jbprotocol.ProtocolServer;
 import net.novatech.jbprotocol.auth.GameProfile;
 import net.novatech.jbprotocol.auth.SessionHandler;
+import net.novatech.jbprotocol.java.data.JavaPong;
 import net.novatech.jbprotocol.java.packets.JavaPacket;
 import net.novatech.jbprotocol.java.packets.handshake.HandshakePacket;
 import net.novatech.jbprotocol.java.packets.login.EncryptionRequestPacket;
@@ -24,6 +26,8 @@ import net.novatech.jbprotocol.java.packets.login.EncryptionResponsePacket;
 import net.novatech.jbprotocol.java.packets.login.LoginStartPacket;
 import net.novatech.jbprotocol.java.packets.login.LoginSuccessPacket;
 import net.novatech.jbprotocol.java.packets.login.SetCompressionPacket;
+import net.novatech.jbprotocol.java.packets.status.RequestPacket;
+import net.novatech.jbprotocol.java.packets.status.ResponsePacket;
 import net.novatech.jbprotocol.listener.GameListener;
 import net.novatech.jbprotocol.listener.LoginListener;
 import net.novatech.jbprotocol.listener.LoginServerListener;
@@ -125,6 +129,15 @@ public class JavaSession implements GameSession {
 					this.mcConnection.disconnect("Could not connect: Outdated server!");
 				}
 				break;
+			}
+		} else if(protocol.getGameState() == JavaGameState.STATUS) { 
+			if(pk instanceof RequestPacket) {
+				JavaPong pong = (JavaPong)ProtocolServer.getInstance().getPong();
+				ProtocolServer.getInstance().getServerListener().handlePong(pong);
+				
+				ResponsePacket pongResponse = new ResponsePacket();
+				pongResponse.pong = pong;
+				this.sendPacket(pongResponse);
 			}
 		} else if(protocol.getGameState() == JavaGameState.LOGIN) {
 			if(pk instanceof LoginStartPacket) {

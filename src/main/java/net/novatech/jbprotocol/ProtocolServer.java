@@ -17,8 +17,10 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import lombok.Getter;
 import lombok.Setter;
 import net.novatech.jbprotocol.bedrock.BedrockSession;
+import net.novatech.jbprotocol.bedrock.data.BedrockPong;
 import net.novatech.jbprotocol.listener.ServerListener;
 import net.novatech.jbprotocol.tcp.TcpServer;
+import net.novatech.jbprotocol.util.Pong;
 
 public class ProtocolServer {
 	
@@ -34,6 +36,10 @@ public class ProtocolServer {
 	@Setter
 	@Getter
 	private ServerListener serverListener;
+	@Getter
+	private Pong pong; 
+	@Getter
+	private static ProtocolServer instance;
 	final EventLoopGroup eventLoop;
 	
 	private TcpServer tcpServer;
@@ -46,9 +52,12 @@ public class ProtocolServer {
 	}
 	
 	public ProtocolServer(String host, int port, GameEdition protocolType) {
+		instance = this;
+		
 		this.host = host;
 		this.port = port;
 		this.gameProtocol = protocolType;
+		this.pong = protocolType.getInitialPong();
 		this.eventLoop = Epoll.isAvailable() ? new EpollEventLoopGroup(0, r -> {return new Thread(r, "ProtocolServer");}) 
 				: new NioEventLoopGroup(0, r -> {return new Thread(r, "ProtocolServer");});
 		this.eventLoop.scheduleAtFixedRate(this::tick, 50, 50, TimeUnit.MILLISECONDS);
@@ -103,6 +112,15 @@ public class ProtocolServer {
 					bedrockSessions.remove(session);
 					break;
 				case UNCONNECTED_PING:
+					BedrockPong pong = (BedrockPong)getPong();
+					getServerListener().handlePong(pong);
+					event.getPingPongInfo().setMotd("MCPE;"
+							+pong.motd+";"
+							+pong.protocolVersion+";"
+							+pong.gameVersion+";"
+							+pong.onlinePlayers +";"
+							+pong.maxPlayers+";"
+							+ socket.getGuid());
 					break;
 				}
 			}
