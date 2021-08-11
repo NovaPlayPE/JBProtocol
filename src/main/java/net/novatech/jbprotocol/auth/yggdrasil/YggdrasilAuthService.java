@@ -12,7 +12,7 @@ import net.novatech.jbprotocol.auth.AuthService;
 import net.novatech.jbprotocol.auth.AuthSession;
 import net.novatech.jbprotocol.auth.GameProfile;
 import net.novatech.jbprotocol.auth.User;
-import net.novatech.library.utils.NetworkUtils;
+import net.novatech.library.net.NetworkUtils;
 
 public class YggdrasilAuthService extends AuthService {
 	

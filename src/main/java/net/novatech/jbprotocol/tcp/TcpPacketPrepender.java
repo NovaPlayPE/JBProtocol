@@ -3,8 +3,7 @@ package net.novatech.jbprotocol.tcp;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.MessageToByteEncoder;
-
-import net.novatech.library.utils.ByteBufUtils;
+import net.novatech.library.io.ByteBufUtils;
 
 public class TcpPacketPrepender extends MessageToByteEncoder<ByteBuf> {
 

@@ -3,7 +3,7 @@ package net.novatech.jbprotocol.bedrock.packets;
 import java.nio.charset.StandardCharsets;
 
 import io.netty.buffer.ByteBuf;
-import net.novatech.library.utils.ByteBufUtils;
+import net.novatech.library.io.ByteBufUtils;
 
 public class LoginPacket extends BedrockPacket{
 

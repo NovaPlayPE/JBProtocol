@@ -1,7 +1,7 @@
 package net.novatech.jbprotocol.bedrock.packets;
 
-import net.novatech.library.utils.ByteBufUtils;
 import io.netty.buffer.ByteBuf;
+import net.novatech.library.io.ByteBufUtils;
 
 import java.util.List;
 

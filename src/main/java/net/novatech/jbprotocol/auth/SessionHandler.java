@@ -7,7 +7,7 @@ import java.util.UUID;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import net.novatech.library.utils.NetworkUtils;
+import net.novatech.library.net.NetworkUtils;
 
 public class SessionHandler {
 	

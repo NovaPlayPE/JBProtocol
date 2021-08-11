@@ -10,7 +10,7 @@ import io.netty.buffer.ByteBuf;
 import net.novatech.jbprotocol.auth.GameProfile;
 import net.novatech.jbprotocol.java.data.JavaPong;
 import net.novatech.jbprotocol.java.packets.JavaPacket;
-import net.novatech.library.utils.ByteBufUtils;
+import net.novatech.library.io.ByteBufUtils;
 
 public class ResponsePacket extends JavaPacket {
 

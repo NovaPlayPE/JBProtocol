@@ -3,8 +3,8 @@ package net.novatech.jbprotocol.java.packets.play.clientbound;
 import io.netty.buffer.ByteBuf;
 import net.novatech.jbprotocol.java.packets.JavaPacket;
 import net.novatech.jbprotocol.packet.PacketHelper;
+import net.novatech.library.io.ByteBufUtils;
 import net.novatech.library.math.Vector3i;
-import net.novatech.library.utils.ByteBufUtils;
 
 public class AcknowledgePlayerDiggingPacket extends JavaPacket {
 	

@@ -5,7 +5,7 @@ import java.util.List;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.ByteToMessageDecoder;
-import net.novatech.library.utils.ByteBufUtils;
+import net.novatech.library.io.ByteBufUtils;
 
 public class TcpPacketDecoder extends ByteToMessageDecoder {
 

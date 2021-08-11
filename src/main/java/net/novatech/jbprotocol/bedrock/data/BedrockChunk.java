@@ -5,10 +5,10 @@ import java.util.ArrayList;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import net.novatech.jbprotocol.util.Chunk;
+import net.novatech.library.io.ByteBufUtils;
 import net.novatech.library.nbt.NBTIO;
 import net.novatech.library.nbt.NBTStream;
 import net.novatech.library.nbt.tags.CompoundTag;
-import net.novatech.library.utils.ByteBufUtils;
 
 public class BedrockChunk extends Chunk {
 

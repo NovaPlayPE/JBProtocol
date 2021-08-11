@@ -24,7 +24,7 @@ import net.novatech.jbprotocol.packet.AbstractPacket;
 import net.novatech.jbprotocol.packet.PacketHelper;
 import net.novatech.jbprotocol.util.SessionData;
 import net.novatech.library.crypto.Processor;
-import net.novatech.library.utils.ByteBufUtils;
+import net.novatech.library.io.ByteBufUtils;
 import lombok.Getter;
 import lombok.Setter;
 

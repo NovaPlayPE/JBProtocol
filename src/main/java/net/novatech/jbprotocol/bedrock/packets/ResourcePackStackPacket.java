@@ -5,7 +5,7 @@ import java.util.List;
 
 import io.netty.buffer.ByteBuf;
 import net.novatech.jbprotocol.bedrock.packets.util.ResourcePackInfo;
-import net.novatech.library.utils.ByteBufUtils;
+import net.novatech.library.io.ByteBufUtils;
 
 public class ResourcePackStackPacket extends BedrockPacket {
 

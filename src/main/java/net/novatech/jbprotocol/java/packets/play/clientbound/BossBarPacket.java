@@ -4,7 +4,7 @@ import java.util.UUID;
 
 import io.netty.buffer.ByteBuf;
 import net.novatech.jbprotocol.java.packets.JavaPacket;
-import net.novatech.library.utils.ByteBufUtils;
+import net.novatech.library.io.ByteBufUtils;
 
 public class BossBarPacket extends JavaPacket {
 

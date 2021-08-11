@@ -2,7 +2,7 @@ package net.novatech.jbprotocol.java.packets.login;
 
 import io.netty.buffer.ByteBuf;
 import net.novatech.jbprotocol.java.packets.JavaPacket;
-import net.novatech.library.utils.ByteBufUtils;
+import net.novatech.library.io.ByteBufUtils;
 
 public class LoginPluginResponsePacket extends JavaPacket {
 

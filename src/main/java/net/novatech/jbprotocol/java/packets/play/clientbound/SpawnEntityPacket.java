@@ -5,10 +5,10 @@ import java.util.UUID;
 import io.netty.buffer.ByteBuf;
 import net.novatech.jbprotocol.java.packets.JavaPacket;
 import net.novatech.jbprotocol.packet.PacketHelper;
+import net.novatech.library.io.ByteBufUtils;
 import net.novatech.library.math.Rotation;
 import net.novatech.library.math.Vector3d;
 import net.novatech.library.math.Vector3f;
-import net.novatech.library.utils.ByteBufUtils;
 
 public class SpawnEntityPacket extends JavaPacket {
 	

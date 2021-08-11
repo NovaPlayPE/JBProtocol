@@ -2,10 +2,10 @@ package net.novatech.jbprotocol.bedrock.packets;
 
 import io.netty.buffer.ByteBuf;
 import net.novatech.jbprotocol.packet.PacketHelper;
+import net.novatech.library.io.BitsUtils;
+import net.novatech.library.io.ByteBufUtils;
 import net.novatech.library.math.Rotation;
 import net.novatech.library.math.Vector3f;
-import net.novatech.library.utils.BitsUtils;
-import net.novatech.library.utils.ByteBufUtils;
 
 public class MoveActorAbsolutePacket extends BedrockPacket {
 	

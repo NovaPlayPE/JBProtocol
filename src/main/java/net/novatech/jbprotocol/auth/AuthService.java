@@ -7,7 +7,7 @@ import org.json.JSONObject;
 
 import com.google.gson.Gson;
 
-import net.novatech.library.utils.NetworkUtils;
+import net.novatech.library.net.NetworkUtils;
 
 public abstract class AuthService {
 	

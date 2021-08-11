@@ -36,7 +36,7 @@ import net.novatech.jbprotocol.packet.AbstractPacket;
 import net.novatech.jbprotocol.tcp.TcpSession;
 import net.novatech.jbprotocol.util.CryptUtils;
 import net.novatech.jbprotocol.util.SessionData;
-import net.novatech.library.utils.ByteBufUtils;
+import net.novatech.library.io.ByteBufUtils;
 
 public class JavaSession implements GameSession {
 

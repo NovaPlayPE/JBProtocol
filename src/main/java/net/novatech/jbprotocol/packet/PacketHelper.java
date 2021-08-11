@@ -5,11 +5,11 @@ import io.netty.buffer.ByteBuf;
 import net.novatech.jbprotocol.bedrock.BedrockSession;
 import net.novatech.jbprotocol.bedrock.packets.BedrockPacket;
 import net.novatech.jbprotocol.bedrock.packets.Wrapper;
+import net.novatech.library.io.ByteBufUtils;
 import net.novatech.library.math.Rotation;
 import net.novatech.library.math.Vector3d;
 import net.novatech.library.math.Vector3f;
 import net.novatech.library.math.Vector3i;
-import net.novatech.library.utils.ByteBufUtils;
 
 public class PacketHelper {
 	
