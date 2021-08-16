@@ -4,6 +4,7 @@ import java.nio.charset.StandardCharsets;
 import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
 import java.security.spec.InvalidKeySpecException;
+import java.util.Queue;
 import java.util.Random;
 import java.util.UUID;
 
@@ -11,6 +12,7 @@ import javax.crypto.SecretKey;
 import javax.xml.crypto.Data;
 
 import io.netty.buffer.ByteBuf;
+import io.netty.util.internal.PlatformDependent;
 import lombok.Getter;
 import lombok.Setter;
 import net.novatech.jbprotocol.GameSession;
@@ -18,6 +20,7 @@ import net.novatech.jbprotocol.MinecraftProtocol;
 import net.novatech.jbprotocol.ProtocolServer;
 import net.novatech.jbprotocol.auth.GameProfile;
 import net.novatech.jbprotocol.auth.SessionHandler;
+import net.novatech.jbprotocol.bedrock.packets.BedrockPacket;
 import net.novatech.jbprotocol.java.data.JavaPong;
 import net.novatech.jbprotocol.java.packets.JavaPacket;
 import net.novatech.jbprotocol.java.packets.handshake.HandshakePacket;
@@ -53,6 +56,8 @@ public class JavaSession implements GameSession {
 	@Setter
 	private TcpSession mcConnection;
 	
+	private Queue<JavaPacket> queuedPacket = PlatformDependent.newMpscQueue();
+	
 	private byte[] verifyToken = new byte[4];
 	
 	private boolean authRequired = false;
@@ -82,6 +87,10 @@ public class JavaSession implements GameSession {
 
 	@Override
 	public void sendPacket(AbstractPacket pk) {
+		this.queuedPacket.add((JavaPacket)pk);
+	}
+	
+	public void sendPacketImmediatly(JavaPacket pk) {
 		this.mcConnection.sendPacket(pk);
 	}
 
@@ -109,6 +118,11 @@ public class JavaSession implements GameSession {
 					getGameListener().receivePacket(pk);
 				}
 			}
+		}
+		
+		while(this.queuedPacket.poll() != null) {
+			JavaPacket pk = this.queuedPacket.poll();
+			this.sendPacketImmediatly(pk);
 		}
 	}
 	

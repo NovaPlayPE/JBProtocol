@@ -2,6 +2,7 @@ package net.novatech.jbprotocol.bedrock;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Queue;
 
 import io.gomint.jraknet.Connection;
 import io.gomint.jraknet.EncapsulatedPacket;
@@ -9,6 +10,7 @@ import io.gomint.jraknet.PacketBuffer;
 import io.gomint.jraknet.PacketReliability;
 import io.gomint.jraknet.SocketEvent;
 import io.netty.buffer.ByteBuf;
+import io.netty.util.internal.PlatformDependent;
 import net.novatech.jbprotocol.GameSession;
 import net.novatech.jbprotocol.MinecraftProtocol;
 import net.novatech.jbprotocol.bedrock.packets.BedrockPacket;
@@ -47,6 +49,8 @@ public class BedrockSession implements GameSession {
 	
 	public Processor outputProcess = new Processor(true);
 	public Processor inputProcess = new Processor(false);
+	
+	private Queue<BedrockPacket> queuedPacket = PlatformDependent.newMpscQueue();
 	
 	public BedrockSession(Connection connection) {
 		this(connection, false);
@@ -110,8 +114,13 @@ public class BedrockSession implements GameSession {
 					} catch(Exception ex) {}
 				}
 			}
-			
-			
+		}
+		
+		while(this.queuedPacket.poll() != null) {
+			BedrockPacket pk = this.queuedPacket.poll();
+			if(!(pk instanceof Wrapper)) {
+				PacketHelper.writeBatchPacket(this, new BedrockPacket[] {(BedrockPacket)pk});
+			}
 		}
 	}
 	
@@ -179,21 +188,24 @@ public class BedrockSession implements GameSession {
 	public void sendPacket(AbstractPacket pk) {
 		if(pk instanceof BedrockPacket) {
 			if(pk instanceof Wrapper){
-				PacketBuffer pB = new PacketBuffer(64);
-				try {
-					ByteBufUtils.writeUnsignedVarInt(pB.getBuffer(), pk.getId());
-					pk.write(pB.getBuffer());
-					this.connection.send(PacketReliability.RELIABLE_ORDERED, pB);
-				} catch (Exception e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+				this.sendPacketImmediatly((BedrockPacket)pk);
 			} else {
-				PacketHelper.writeBatchPacket(this, new BedrockPacket[] {(BedrockPacket)pk});
+				this.queuedPacket.add((BedrockPacket)pk);
 			}
 			
 		} else {
 			throw new IllegalArgumentException("Packet must override BedrockPacket, but given " + pk.getClass().getName());
+		}
+	}
+	
+	public void sendPacketImmediatly(BedrockPacket pk) {
+		PacketBuffer pB = new PacketBuffer(64);
+		try {
+			ByteBufUtils.writeUnsignedVarInt(pB.getBuffer(), pk.getId());
+			pk.write(pB.getBuffer());
+			this.connection.send(PacketReliability.RELIABLE_ORDERED, pB);
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 	

@@ -21,7 +21,7 @@ public class PacketHelper {
 		}
 		Wrapper wrapper = new Wrapper();
 		wrapper.payload = session.outputProcess.process(buf);
-		session.sendPacket(wrapper);
+		session.sendPacketImmediatly(wrapper);
 	}
 	
 	public static void writePosition(ByteBuf buf, Vector3i position) {
