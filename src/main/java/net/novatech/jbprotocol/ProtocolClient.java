@@ -37,7 +37,7 @@ public class ProtocolClient{
 	@Getter
 	@Setter
 	private ClientListener clientListener;
-	final EventLoopGroup eventLoop;
+	public final EventLoopGroup eventLoop;
 	
 	public ProtocolClient(InetSocketAddress address, GameEdition protocolType) {
 		this(address.getAddress().toString(), address.getPort(), protocolType);

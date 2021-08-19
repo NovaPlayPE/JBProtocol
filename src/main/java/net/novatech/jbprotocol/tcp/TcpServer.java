@@ -29,6 +29,7 @@ public class TcpServer {
 		this.tcpSocket = new ServerBootstrap()
 			
 				.channel(NioServerSocketChannel.class)
+				.group(mainServer.eventLoop)
 				.childHandler(new ChannelInitializer<Channel>() {
 					public void initChannel(Channel channel) {
 						TcpSession nettySession = new TcpServerSession(TcpServer.this);

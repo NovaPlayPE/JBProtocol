@@ -17,6 +17,6 @@ public enum GameEdition {
 	}
 	
 	public Pong getInitialPong() {
-		return Reflect.on(this.pongClass).get();
+		return Reflect.on(this.pongClass).newInstance();
 	}
 }

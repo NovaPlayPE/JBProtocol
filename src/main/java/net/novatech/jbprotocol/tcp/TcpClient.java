@@ -24,6 +24,7 @@ public class TcpClient {
 	public void initialize() {
 		this.tcpSocket = new Bootstrap()
 				.channel(NioSocketChannel.class)
+				.group(mainClient.eventLoop)
 				.handler(new ChannelInitializer<Channel>() {
 					public void initChannel(Channel channel) {
 						TcpSession nettySession = new TcpClientSession(TcpClient.this);

@@ -40,7 +40,7 @@ public class ProtocolServer {
 	private Pong pong; 
 	@Getter
 	private static ProtocolServer instance;
-	final EventLoopGroup eventLoop;
+	public final EventLoopGroup eventLoop;
 	
 	private TcpServer tcpServer;
 	private ServerSocket udpServer;
