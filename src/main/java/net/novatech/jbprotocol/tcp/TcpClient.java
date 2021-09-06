@@ -7,6 +7,9 @@ import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
+import io.netty.channel.epoll.Epoll;
+import io.netty.channel.epoll.EpollServerSocketChannel;
+import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.handler.timeout.ReadTimeoutHandler;
 import lombok.Getter;
@@ -23,7 +26,8 @@ public class TcpClient {
 	
 	public void initialize() {
 		this.tcpSocket = new Bootstrap()
-				.channel(NioSocketChannel.class)
+				
+				.channel(Epoll.isAvailable() ? EpollServerSocketChannel.class : NioServerSocketChannel.class)
 				.group(mainClient.eventLoop)
 				.handler(new ChannelInitializer<Channel>() {
 					public void initChannel(Channel channel) {

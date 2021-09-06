@@ -8,6 +8,8 @@ import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
+import io.netty.channel.epoll.Epoll;
+import io.netty.channel.epoll.EpollServerSocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.timeout.ReadTimeoutHandler;
 
@@ -28,7 +30,7 @@ public class TcpServer {
 	public void initialize() {
 		this.tcpSocket = new ServerBootstrap()
 			
-				.channel(NioServerSocketChannel.class)
+				.channel(Epoll.isAvailable() ? EpollServerSocketChannel.class : NioServerSocketChannel.class)
 				.group(mainServer.eventLoop)
 				.childHandler(new ChannelInitializer<Channel>() {
 					public void initChannel(Channel channel) {

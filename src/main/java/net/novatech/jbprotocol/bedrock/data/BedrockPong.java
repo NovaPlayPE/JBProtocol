@@ -6,5 +6,7 @@ public class BedrockPong extends Pong {
 	
 	public String gameVersion;
 	public int protocolVersion;
+	public String subMotd;
+	public String gamemode;
 	
 }

@@ -6,6 +6,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import io.gomint.jraknet.ServerSocket;
 import io.gomint.jraknet.Socket;
 import io.gomint.jraknet.SocketEvent;
@@ -41,6 +44,8 @@ public class ProtocolServer {
 	@Getter
 	private static ProtocolServer instance;
 	public final EventLoopGroup eventLoop;
+	@Getter
+	private static final Logger logger = LoggerFactory.getLogger(ProtocolServer.class);
 	
 	private TcpServer tcpServer;
 	private ServerSocket udpServer;
@@ -96,7 +101,7 @@ public class ProtocolServer {
 	}
 	
 	private void bindBedrock() {
-		this.udpServer = new ServerSocket(getMaxConnections());
+		this.udpServer = new ServerSocket(getLogger(), getMaxConnections());
 		udpServer.setEventHandler(new SocketEventHandler() {
 			@Override
 			public void onSocketEvent(Socket socket, SocketEvent event) {
@@ -120,7 +125,10 @@ public class ProtocolServer {
 							+pong.gameVersion+";"
 							+pong.onlinePlayers +";"
 							+pong.maxPlayers+";"
-							+ socket.getGuid());
+							+socket.getGuid()+";"
+							+pong.subMotd+";"
+							+pong.gamemode+";"
+							+"1");
 					break;
 				}
 			}
