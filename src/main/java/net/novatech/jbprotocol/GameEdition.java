@@ -1,9 +1,8 @@
 package net.novatech.jbprotocol;
 
 import net.novatech.jbprotocol.bedrock.data.BedrockPong;
+import net.novatech.jbprotocol.data.Pong;
 import net.novatech.jbprotocol.java.data.JavaPong;
-import net.novatech.jbprotocol.util.Pong;
-
 import net.novatech.library.reflection.Reflect;
 
 public enum GameEdition {

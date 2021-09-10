@@ -4,7 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import net.novatech.jbprotocol.auth.GameProfile;
 import net.novatech.jbprotocol.auth.Property;
-import net.novatech.jbprotocol.util.SessionData;
+import net.novatech.jbprotocol.data.SessionData;
 
 public class JavaSessionData extends SessionData {
 	

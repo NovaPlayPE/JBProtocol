@@ -1,7 +1,7 @@
 package net.novatech.jbprotocol.listener;
 
 import net.novatech.jbprotocol.GameSession;
-import net.novatech.jbprotocol.util.Pong;
+import net.novatech.jbprotocol.data.Pong;
 
 public abstract class ServerListener {
 	

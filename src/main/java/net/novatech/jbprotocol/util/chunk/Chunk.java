@@ -1,4 +1,4 @@
-package net.novatech.jbprotocol.util;
+package net.novatech.jbprotocol.util.chunk;
 
 import io.netty.buffer.ByteBuf;
 

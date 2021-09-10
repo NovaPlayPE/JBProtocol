@@ -1,4 +1,4 @@
-package net.novatech.jbprotocol.util;
+package net.novatech.jbprotocol.data;
 
 public class Pong {
 	

@@ -2,7 +2,7 @@ package net.novatech.jbprotocol.bedrock.data;
 
 import java.util.ArrayList;
 
-import net.novatech.jbprotocol.util.ChunkData;
+import net.novatech.jbprotocol.util.chunk.ChunkData;
 import net.novatech.library.nbt.tags.CompoundTag;
 
 public class BedrockChunkData extends ChunkData {

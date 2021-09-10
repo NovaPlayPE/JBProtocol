@@ -1,7 +1,7 @@
 package net.novatech.jbprotocol.bedrock.packets;
 
 import io.netty.buffer.ByteBuf;
-import net.novatech.jbprotocol.util.Chunk;
+import net.novatech.jbprotocol.util.chunk.Chunk;
 
 public class LevelChunkPacket extends BedrockPacket {
 	

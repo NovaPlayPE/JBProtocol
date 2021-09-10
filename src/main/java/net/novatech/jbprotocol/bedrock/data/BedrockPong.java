@@ -1,6 +1,6 @@
 package net.novatech.jbprotocol.bedrock.data;
 
-import net.novatech.jbprotocol.util.Pong;
+import net.novatech.jbprotocol.data.Pong;
 
 public class BedrockPong extends Pong {
 	

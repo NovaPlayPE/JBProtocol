@@ -21,6 +21,8 @@ import net.novatech.jbprotocol.ProtocolServer;
 import net.novatech.jbprotocol.auth.GameProfile;
 import net.novatech.jbprotocol.auth.SessionHandler;
 import net.novatech.jbprotocol.bedrock.packets.BedrockPacket;
+import net.novatech.jbprotocol.data.CryptUtils;
+import net.novatech.jbprotocol.data.SessionData;
 import net.novatech.jbprotocol.java.data.JavaPong;
 import net.novatech.jbprotocol.java.packets.JavaPacket;
 import net.novatech.jbprotocol.java.packets.handshake.HandshakePacket;
@@ -37,8 +39,6 @@ import net.novatech.jbprotocol.listener.LoginServerListener;
 import net.novatech.jbprotocol.listener.LoginClientListener;
 import net.novatech.jbprotocol.packet.AbstractPacket;
 import net.novatech.jbprotocol.tcp.TcpSession;
-import net.novatech.jbprotocol.util.CryptUtils;
-import net.novatech.jbprotocol.util.SessionData;
 import net.novatech.library.io.ByteBufUtils;
 
 public class JavaSession implements GameSession {

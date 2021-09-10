@@ -1,7 +1,7 @@
 package net.novatech.jbprotocol.java.data;
 
 import net.novatech.jbprotocol.auth.GameProfile;
-import net.novatech.jbprotocol.util.Pong;
+import net.novatech.jbprotocol.data.Pong;
 
 public class JavaPong extends Pong {
 	

@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
-import net.novatech.jbprotocol.util.Chunk;
+import net.novatech.jbprotocol.util.chunk.Chunk;
 import net.novatech.library.io.ByteBufUtils;
 import net.novatech.library.nbt.NBTIO;
 import net.novatech.library.nbt.NBTStream;

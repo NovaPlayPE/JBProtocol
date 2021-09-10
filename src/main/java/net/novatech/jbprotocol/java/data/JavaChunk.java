@@ -1,7 +1,7 @@
 package net.novatech.jbprotocol.java.data;
 
 import io.netty.buffer.ByteBuf;
-import net.novatech.jbprotocol.util.Chunk;
+import net.novatech.jbprotocol.util.chunk.Chunk;
 import net.novatech.library.io.ByteBufUtils;
 import net.novatech.library.nbt.NBTIO;
 import net.novatech.library.nbt.NBTStream;

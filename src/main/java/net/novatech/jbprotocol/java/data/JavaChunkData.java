@@ -1,6 +1,6 @@
 package net.novatech.jbprotocol.java.data;
 
-import net.novatech.jbprotocol.util.ChunkData;
+import net.novatech.jbprotocol.util.chunk.ChunkData;
 import net.novatech.library.nbt.tags.CompoundTag;
 
 public class JavaChunkData extends ChunkData {

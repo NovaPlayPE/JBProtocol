@@ -2,7 +2,7 @@ package net.novatech.jbprotocol.bedrock;
 
 import lombok.Getter;
 import lombok.Setter;
-import net.novatech.jbprotocol.util.SessionData;
+import net.novatech.jbprotocol.data.SessionData;
 
 public class BedrockSessionData extends SessionData {
 	

@@ -2,7 +2,7 @@ package net.novatech.jbprotocol.java.packets.play.clientbound;
 
 import io.netty.buffer.ByteBuf;
 import net.novatech.jbprotocol.java.packets.JavaPacket;
-import net.novatech.jbprotocol.util.Chunk;
+import net.novatech.jbprotocol.util.chunk.Chunk;
 
 public class ChunkDataPacket extends JavaPacket {
 	

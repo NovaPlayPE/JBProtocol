@@ -21,9 +21,9 @@ import lombok.Getter;
 import lombok.Setter;
 import net.novatech.jbprotocol.bedrock.BedrockSession;
 import net.novatech.jbprotocol.bedrock.data.BedrockPong;
+import net.novatech.jbprotocol.data.Pong;
 import net.novatech.jbprotocol.listener.ServerListener;
 import net.novatech.jbprotocol.tcp.TcpServer;
-import net.novatech.jbprotocol.util.Pong;
 
 public class ProtocolServer {
 	

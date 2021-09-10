@@ -1,4 +1,4 @@
-package net.novatech.jbprotocol.util;
+package net.novatech.jbprotocol.data;
 
 import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
