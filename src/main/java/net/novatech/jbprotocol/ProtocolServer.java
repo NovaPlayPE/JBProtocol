@@ -4,6 +4,7 @@ import java.net.InetSocketAddress;
 import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.StringJoiner;
 import java.util.concurrent.TimeUnit;
 
 import org.slf4j.Logger;
@@ -24,6 +25,7 @@ import net.novatech.jbprotocol.bedrock.data.BedrockPong;
 import net.novatech.jbprotocol.data.Pong;
 import net.novatech.jbprotocol.listener.ServerListener;
 import net.novatech.jbprotocol.tcp.TcpServer;
+import net.novatech.jbprotocol.util.MessageConsumer;
 
 public class ProtocolServer {
 	
@@ -68,13 +70,13 @@ public class ProtocolServer {
 		this.eventLoop.scheduleAtFixedRate(this::tick, 50, 50, TimeUnit.MILLISECONDS);
 	}
 	
-	public void bind() {
+	public void bind(MessageConsumer consumer) {
 		switch(this.gameProtocol) {
 		case JAVA:
-			bindJava();
+			bindJava(consumer);
 			break;
 		case BEDROCK:
-			bindBedrock();
+			bindBedrock(consumer);
 			break;
 		}
 	}
@@ -94,13 +96,13 @@ public class ProtocolServer {
 		}
 	}
 	
-	private void bindJava() {
+	private void bindJava(MessageConsumer consumer) {
 		this.tcpServer = new TcpServer(this);
 		tcpServer.initialize();
-		tcpServer.bind();
+		tcpServer.bind(consumer);
 	}
 	
-	private void bindBedrock() {
+	private void bindBedrock(MessageConsumer consumer) {
 		this.udpServer = new ServerSocket(getLogger(), getMaxConnections());
 		udpServer.setEventHandler(new SocketEventHandler() {
 			@Override
@@ -119,26 +121,29 @@ public class ProtocolServer {
 				case UNCONNECTED_PING:
 					BedrockPong pong = (BedrockPong)getPong();
 					getServerListener().handlePong(pong);
-					event.getPingPongInfo().setMotd("MCPE;"
-							+pong.motd+";"
-							+pong.protocolVersion+";"
-							+pong.gameVersion+";"
-							+pong.onlinePlayers +";"
-							+pong.maxPlayers+";"
-							+socket.getGuid()+";"
-							+pong.subMotd+";"
-							+pong.gamemode+";"
-							+"1");
+					StringJoiner motd = new StringJoiner(";")
+							.add("MCPE")
+							.add(pong.motd)
+							.add(String.valueOf(pong.protocolVersion))
+							.add(pong.gameVersion)
+							.add(String.valueOf(pong.onlinePlayers))
+							.add(String.valueOf(pong.maxPlayers))
+							.add(String.valueOf(socket.getGuid()))
+							.add(pong.subMotd)
+							.add(pong.gamemode)
+							.add("1");
+					event.getPingPongInfo().setMotd(motd.toString());
 					break;
 				}
 			}
 			
 		});
+		udpServer.setMojangModificationEnabled(true);
 		try {
 			udpServer.bind(getHost(), getPort());
+			consumer.success();
 		} catch (SocketException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			consumer.failed(e);
 		}
 	}
 	

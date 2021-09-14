@@ -1,5 +1,6 @@
 package net.novatech.jbprotocol.tcp;
 
+import net.novatech.jbprotocol.util.MessageConsumer;
 import net.novatech.jbprotocol.ProtocolServer;
 import net.novatech.jbprotocol.java.JavaSession;
 import io.netty.bootstrap.Bootstrap;
@@ -32,6 +33,7 @@ public class TcpServer {
 			
 				.channel(Epoll.isAvailable() ? EpollServerSocketChannel.class : NioServerSocketChannel.class)
 				.group(mainServer.eventLoop)
+				.localAddress(new InetSocketAddress(mainServer.getHost(), mainServer.getPort()))
 				.childHandler(new ChannelInitializer<Channel>() {
 					public void initChannel(Channel channel) {
 						TcpSession nettySession = new TcpServerSession(TcpServer.this);
@@ -53,13 +55,13 @@ public class TcpServer {
 		});
 	}
 	
-	public void bind() {
+	public void bind(MessageConsumer consumer) {
 		try {
-			this.future = this.tcpSocket.bind(this.mainServer.getPort());
+			this.future = this.tcpSocket.bind();
 			this.future.sync().channel().closeFuture().syncUninterruptibly();
+			consumer.success();
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			consumer.failed(e);
 		}
 	}
 	

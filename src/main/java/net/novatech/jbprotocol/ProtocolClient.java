@@ -20,6 +20,7 @@ import net.novatech.jbprotocol.listener.ClientListener;
 import net.novatech.jbprotocol.packet.AbstractPacket;
 import net.novatech.jbprotocol.tcp.TcpClient;
 import net.novatech.jbprotocol.tcp.TcpSession;
+import net.novatech.jbprotocol.util.MessageConsumer;
 
 public class ProtocolClient{
 	
@@ -52,10 +53,10 @@ public class ProtocolClient{
 		this.eventLoop.scheduleAtFixedRate(this::tick, 50, 50, TimeUnit.MILLISECONDS);
 	}
 	
-	public void connectTo(ServerConnectInfo info) {
+	public void connectTo(ServerConnectInfo info, MessageConsumer consumer) {
 		info.setGameProtocol(gameProtocol);
 		this.connectedServer = info;
-		handleConnection();
+		handleConnection(consumer);
 	}
 	
 	public void sendPacket(AbstractPacket packet) {
@@ -68,20 +69,20 @@ public class ProtocolClient{
 		}
 	}
 	
-	private void handleConnection() {
+	private void handleConnection(MessageConsumer consumer) {
 		switch(gameProtocol) {
-		case BEDROCK -> createBedrockConnection();
-		case JAVA -> createJavaConnection();
+		case BEDROCK -> createBedrockConnection(consumer);
+		case JAVA -> createJavaConnection(consumer);
 		}
 	}
 	
-	private void createJavaConnection() {
+	private void createJavaConnection(MessageConsumer consumer) {
 		TcpClient client = new TcpClient(this);
 		client.initialize();
-		client.connect(getConnectedServer().getAddress());
+		client.connect(getConnectedServer().getAddress(), consumer);
 	}
 	
-	private void createBedrockConnection() {
+	private void createBedrockConnection(MessageConsumer consumer) {
 		ClientSocket client = new ClientSocket();
 		client.setEventHandler(new SocketEventHandler() {
 
@@ -106,8 +107,12 @@ public class ProtocolClient{
 		});
 		try {
 			client.initialize();
-		} catch(SocketException ex) {}
-		client.connect(getConnectedServer().getAddress());
+			client.connect(getConnectedServer().getAddress());
+			consumer.success();
+		} catch(SocketException ex) {
+			consumer.failed(ex);
+		}
+			
 	}
 	
 }

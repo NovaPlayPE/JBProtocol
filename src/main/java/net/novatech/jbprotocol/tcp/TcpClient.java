@@ -1,6 +1,8 @@
 package net.novatech.jbprotocol.tcp;
 
 import java.net.InetSocketAddress;
+
+import net.novatech.jbprotocol.util.MessageConsumer;
 import net.novatech.jbprotocol.ProtocolClient;
 import net.novatech.jbprotocol.java.JavaSession;
 import io.netty.bootstrap.Bootstrap;
@@ -50,8 +52,13 @@ public class TcpClient {
 				});
 	}
 	
-	public void connect(InetSocketAddress address) {
-		this.tcpSocket.bind(address.getAddress(), address.getPort());
+	public void connect(InetSocketAddress address, MessageConsumer consumer) {
+		try {
+			this.tcpSocket.bind(address.getAddress(), address.getPort());
+			consumer.success();
+		} catch(Exception ex) {
+			consumer.failed(ex);
+		}
 	}
 	
 }
