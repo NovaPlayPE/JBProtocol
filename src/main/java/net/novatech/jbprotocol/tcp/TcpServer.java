@@ -57,10 +57,10 @@ public class TcpServer {
 	
 	public void bind(MessageConsumer consumer) {
 		try {
-			this.future = this.tcpSocket.bind();
-			this.future.sync().channel().closeFuture().syncUninterruptibly();
+			this.future = this.tcpSocket.bind(mainServer.getPort());
 			consumer.success();
-		} catch (InterruptedException e) {
+			this.future.sync().channel().closeFuture().syncUninterruptibly();
+		} catch (Exception e) {
 			consumer.failed(e);
 		}
 	}
