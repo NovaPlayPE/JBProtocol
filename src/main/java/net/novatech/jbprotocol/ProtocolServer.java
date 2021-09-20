@@ -128,7 +128,7 @@ public class ProtocolServer {
 							.add(pong.gameVersion)
 							.add(String.valueOf(pong.onlinePlayers))
 							.add(String.valueOf(pong.maxPlayers))
-							.add(String.valueOf(socket.getGuid()))
+							.add(String.valueOf(udpServer.getGuid()))
 							.add(pong.subMotd)
 							.add(pong.gamemode)
 							.add("1");
