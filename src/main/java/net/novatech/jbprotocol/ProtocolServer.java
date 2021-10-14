@@ -55,7 +55,7 @@ public class ProtocolServer {
 	private List<BedrockSession> bedrockSessions = new ArrayList<BedrockSession>();
 	
 	public ProtocolServer(InetSocketAddress address, GameEdition protocolType) {
-		this(address.getAddress().toString(), address.getPort(), protocolType);
+		this(address.getAddress().getHostAddress(), address.getPort(), protocolType);
 	}
 	
 	public ProtocolServer(String host, int port, GameEdition protocolType) {
@@ -133,6 +133,8 @@ public class ProtocolServer {
 							.add(pong.gamemode)
 							.add("1");
 					event.getPingPongInfo().setMotd(motd.toString());
+					break;
+				default:
 					break;
 				}
 			}

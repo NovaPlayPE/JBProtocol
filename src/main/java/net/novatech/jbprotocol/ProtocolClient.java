@@ -41,7 +41,7 @@ public class ProtocolClient{
 	public final EventLoopGroup eventLoop;
 	
 	public ProtocolClient(InetSocketAddress address, GameEdition protocolType) {
-		this(address.getAddress().toString(), address.getPort(), protocolType);
+		this(address.getAddress().getHostAddress(), address.getPort(), protocolType);
 	}
 	
 	public ProtocolClient(String host, int port, GameEdition protocolType) {
@@ -99,6 +99,8 @@ public class ProtocolClient{
 					break;
 				case CONNECTION_ATTEMPT_SUCCEEDED:
 					getClientListener().sessionConnected(ProtocolClient.this.session);
+					break;
+				default:
 					break;
 				}
 				
