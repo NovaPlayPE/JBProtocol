@@ -23,15 +23,6 @@ public class ClientChatPacket extends JavaPacket {
 		public byte getType() {
 			return this.type;
 		}
-
-		public static JavaChatType searchByType(byte type) {
-			for (JavaChatType types : JavaChatType.values()) {
-				if (types.getType() == type) {
-					return types;
-				}
-			}
-			return null;
-		}
 	}
 
 	public String message;
@@ -48,7 +39,7 @@ public class ClientChatPacket extends JavaPacket {
 	@Override
 	public void read(ByteBuf buf) throws Exception {
 		this.message = ByteBufUtils.readString(buf);
-		this.type = JavaChatType.searchByType(buf.readByte());
+		this.type = JavaChatType.values()[buf.readByte()];
 		this.sender = ByteBufUtils.readUUID(buf);
 	}
 
