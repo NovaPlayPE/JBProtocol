@@ -10,6 +10,7 @@ import java.util.concurrent.TimeUnit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import io.gomint.jraknet.Connection;
 import io.gomint.jraknet.ServerSocket;
 import io.gomint.jraknet.Socket;
 import io.gomint.jraknet.SocketEvent;
@@ -104,43 +105,40 @@ public class ProtocolServer {
 	
 	private void bindBedrock(MessageConsumer consumer) {
 		this.udpServer = new ServerSocket(getLogger(), getMaxConnections());
-		udpServer.setEventHandler(new SocketEventHandler() {
-			@Override
-			public void onSocketEvent(Socket socket, SocketEvent event) {
+		this.udpServer.setMojangModificationEnabled(true);
+		this.udpServer.setEventHandler((socket, event) -> {
+			switch(event.getType()) {
+			case NEW_INCOMING_CONNECTION:
 				BedrockSession session = new BedrockSession(event.getConnection());
-				switch(event.getType()) {
-				case NEW_INCOMING_CONNECTION:
-					getServerListener().sessionConnected(session);
-					bedrockSessions.add(session);
-					break;
-				case CONNECTION_CLOSED:
-				case CONNECTION_DISCONNECTED:
-					getServerListener().sessionDisconnected(session, "Session dissconected: " + event.getReason());
-					bedrockSessions.remove(session);
-					break;
-				case UNCONNECTED_PING:
-					BedrockPong pong = (BedrockPong)getPong();
-					getServerListener().handlePong(pong);
-					StringJoiner motd = new StringJoiner(";")
-							.add("MCPE")
-							.add(pong.motd)
-							.add(String.valueOf(pong.protocolVersion))
-							.add(pong.gameVersion)
-							.add(String.valueOf(pong.onlinePlayers))
-							.add(String.valueOf(pong.maxPlayers))
-							.add(String.valueOf(udpServer.getGuid()))
-							.add(pong.subMotd)
-							.add(pong.gamemode)
-							.add("1");
-					event.getPingPongInfo().setMotd(motd.toString());
-					break;
-				default:
-					break;
-				}
+				getServerListener().sessionConnected(session);
+				bedrockSessions.add(session);
+				break;
+			case CONNECTION_CLOSED:
+			case CONNECTION_DISCONNECTED:
+				BedrockSession sessionn = searchSession(event.getConnection());
+				getServerListener().sessionDisconnected(sessionn, "Session dissconected: " + event.getReason());
+				bedrockSessions.remove(sessionn);
+				break;
+			case UNCONNECTED_PING:
+				BedrockPong pong = (BedrockPong)getPong();
+				getServerListener().handlePong(pong);
+				StringJoiner motd = new StringJoiner(";")
+						.add("MCPE")
+						.add(pong.motd)
+						.add(String.valueOf(pong.protocolVersion))
+						.add(pong.gameVersion)
+						.add(String.valueOf(pong.onlinePlayers))
+						.add(String.valueOf(pong.maxPlayers))
+						.add(String.valueOf(udpServer.getGuid()))
+						.add(pong.subMotd)
+						.add(pong.gamemode)
+						.add("1");
+				event.getPingPongInfo().setMotd(motd.toString());
+				break;
+			default:
+				break;
 			}
-			
 		});
-		udpServer.setMojangModificationEnabled(true);
 		try {
 			udpServer.bind(getHost(), getPort());
 			consumer.success();
@@ -149,6 +147,13 @@ public class ProtocolServer {
 		}
 	}
 	
-	
+	private BedrockSession searchSession(Connection connection) {
+		for(BedrockSession session : bedrockSessions) {
+			if(session.getConnection() == connection) {
+				return session;
+			}
+		}
+		return null;
+	}
 	
 }

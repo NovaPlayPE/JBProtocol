@@ -43,7 +43,7 @@ public class BedrockSession implements GameSession {
 	public MinecraftProtocol protocol = null;
 	@Getter
 	private BedrockSessionData sessionData = null;
-	
+	@Getter
 	private Connection connection;
 	private boolean authRequired;
 	

@@ -32,7 +32,6 @@ net\novatech\jbprotocol\auth\User.class
 net\novatech\jbprotocol\bedrock\data\BedrockChunk.class
 net\novatech\jbprotocol\packet\PacketHelper.class
 net\novatech\jbprotocol\bedrock\packets\LevelEventPacket.class
-net\novatech\jbprotocol\ProtocolServer$2.class
 net\novatech\jbprotocol\bedrock\packets\PlayStatusPacket.class
 net\novatech\jbprotocol\listener\ServerListener.class
 net\novatech\jbprotocol\auth\yggdrasil\YggdrasilAuthService$1.class
