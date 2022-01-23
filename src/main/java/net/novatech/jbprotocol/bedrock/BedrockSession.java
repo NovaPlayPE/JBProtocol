@@ -14,6 +14,7 @@ import io.netty.util.internal.PlatformDependent;
 import net.novatech.jbprotocol.GameSession;
 import net.novatech.jbprotocol.MinecraftProtocol;
 import net.novatech.jbprotocol.bedrock.packets.BedrockPacket;
+import net.novatech.jbprotocol.bedrock.packets.DisconnectPacket;
 import net.novatech.jbprotocol.bedrock.packets.LoginPacket;
 import net.novatech.jbprotocol.bedrock.packets.PlayStatusPacket;
 import net.novatech.jbprotocol.bedrock.packets.Wrapper;
@@ -87,7 +88,7 @@ public class BedrockSession implements GameSession {
 	
 	public void tick() {
 		List<PacketBuffer> pBs = null;
-		
+		System.out.println("Scheduler for Bedrock works");
 		while(this.connection.receive() != null) {
 			EncapsulatedPacket enc = this.connection.receive();
 			PacketBuffer pB = new PacketBuffer(enc.getPacketData());
@@ -209,8 +210,14 @@ public class BedrockSession implements GameSession {
 		}
 	}
 	
-	
-	
-	
+	public void disconnect(String reason) {
+		DisconnectPacket pk = new DisconnectPacket();
+		if(reason != null && !reason.isEmpty()) {
+			pk.hideScreen = false;
+			pk.kickMessage = reason;
+			sendPacketImmediatly(pk);
+		}
+		getConnection().disconnect(reason);
+	}
 
 }

@@ -3,7 +3,7 @@ package net.novatech.jbprotocol.bedrock.packets;
 import io.netty.buffer.ByteBuf;
 import net.novatech.library.io.ByteBufUtils;
 
-public class DissconnectPacket extends BedrockPacket {
+public class DisconnectPacket extends BedrockPacket {
 
 	public boolean hideScreen;
 	public String kickMessage;

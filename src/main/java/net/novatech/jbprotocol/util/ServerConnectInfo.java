@@ -1,7 +1,8 @@
-package net.novatech.jbprotocol;
+package net.novatech.jbprotocol.util;
 
 import lombok.Getter;
 import lombok.Setter;
+import net.novatech.jbprotocol.GameEdition;
 
 import java.net.InetSocketAddress;
 

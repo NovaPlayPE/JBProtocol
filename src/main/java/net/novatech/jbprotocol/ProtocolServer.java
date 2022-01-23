@@ -50,10 +50,11 @@ public class ProtocolServer {
 	@Getter
 	private static final Logger logger = LoggerFactory.getLogger(ProtocolServer.class);
 	
+	@Getter
+	private SessionManager sessionManager;
+	
 	private TcpServer tcpServer;
 	private ServerSocket udpServer;
-	
-	private List<BedrockSession> bedrockSessions = new ArrayList<BedrockSession>();
 	
 	public ProtocolServer(InetSocketAddress address, GameEdition protocolType) {
 		this(address.getAddress().getHostAddress(), address.getPort(), protocolType);
@@ -66,6 +67,7 @@ public class ProtocolServer {
 		this.port = port;
 		this.gameProtocol = protocolType;
 		this.pong = protocolType.getInitialPong();
+		this.sessionManager = new SessionManager(this);
 		this.eventLoop = Epoll.isAvailable() ? new EpollEventLoopGroup(0, r -> {return new Thread(r, "ProtocolServer");}) 
 				: new NioEventLoopGroup(0, r -> {return new Thread(r, "ProtocolServer");});
 		this.eventLoop.scheduleAtFixedRate(this::tick, 50, 50, TimeUnit.MILLISECONDS);
@@ -90,11 +92,7 @@ public class ProtocolServer {
 	}
 	
 	public void tick() {
-		if(getGameProtocol() == GameEdition.JAVA) {
-			this.tcpServer.tick();
-		} else if(getGameProtocol() == GameEdition.BEDROCK){
-			this.bedrockSessions.forEach(s -> {s.tick();});
-		}
+		this.getSessionManager().tick();
 	}
 	
 	private void bindJava(MessageConsumer consumer) {
@@ -104,20 +102,23 @@ public class ProtocolServer {
 	}
 	
 	private void bindBedrock(MessageConsumer consumer) {
+		System.setProperty("java.net.preferIPv4Stack", "true");
+		System.setProperty("io.netty.selectorAutoRebuildThreshold", "0");
 		this.udpServer = new ServerSocket(getLogger(), getMaxConnections());
 		this.udpServer.setMojangModificationEnabled(true);
 		this.udpServer.setEventHandler((socket, event) -> {
+			System.out.println("Event: " + event.getType().name());
 			switch(event.getType()) {
 			case NEW_INCOMING_CONNECTION:
-				BedrockSession session = new BedrockSession(event.getConnection());
-				getServerListener().sessionConnected(session);
-				bedrockSessions.add(session);
+				System.out.println("Someone tried to connect: " + event.getConnection().getAddress().toString());
+				getSessionManager().addBedrockConection(event.getConnection());
 				break;
 			case CONNECTION_CLOSED:
 			case CONNECTION_DISCONNECTED:
-				BedrockSession sessionn = searchSession(event.getConnection());
+				System.out.println("Someone tried to disconnect: " + event.getConnection().getAddress().toString());
+				BedrockSession sessionn = getSessionManager().searchSession(event.getConnection());
+				getSessionManager().sessions.remove(sessionn);
 				getServerListener().sessionDisconnected(sessionn, "Session dissconected: " + event.getReason());
-				bedrockSessions.remove(sessionn);
 				break;
 			case UNCONNECTED_PING:
 				BedrockPong pong = (BedrockPong)getPong();
@@ -145,15 +146,6 @@ public class ProtocolServer {
 		} catch (SocketException e) {
 			consumer.failed(e);
 		}
-	}
-	
-	private BedrockSession searchSession(Connection connection) {
-		for(BedrockSession session : bedrockSessions) {
-			if(session.getConnection() == connection) {
-				return session;
-			}
-		}
-		return null;
 	}
 	
 }

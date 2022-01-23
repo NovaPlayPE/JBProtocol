@@ -21,6 +21,7 @@ import net.novatech.jbprotocol.packet.AbstractPacket;
 import net.novatech.jbprotocol.tcp.TcpClient;
 import net.novatech.jbprotocol.tcp.TcpSession;
 import net.novatech.jbprotocol.util.MessageConsumer;
+import net.novatech.jbprotocol.util.ServerConnectInfo;
 
 public class ProtocolClient{
 	

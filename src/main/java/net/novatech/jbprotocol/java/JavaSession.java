@@ -218,4 +218,10 @@ public class JavaSession implements GameSession {
 
 	}
 
+	@Override
+	public void disconnect(String reason) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

@@ -96,13 +96,13 @@ net\novatech\jbprotocol\bedrock\packets\BossEventPacket$1.class
 net\novatech\jbprotocol\bedrock\packets\LevelChunkPacket.class
 net\novatech\jbprotocol\ProtocolServer$1.class
 net\novatech\jbprotocol\java\JavaProtocol.class
-net\novatech\jbprotocol\bedrock\packets\DissconnectPacket.class
 net\novatech\jbprotocol\auth\GameProfile.class
 net\novatech\jbprotocol\java\packets\play\clientbound\BossBarPacket.class
 net\novatech\jbprotocol\tcp\TcpPacketCompressor.class
 net\novatech\jbprotocol\bedrock\packets\MoveActorAbsolutePacket.class
 net\novatech\jbprotocol\auth\AuthService.class
 net\novatech\jbprotocol\bedrock\packets\StartGamePacket.class
+net\novatech\jbprotocol\bedrock\packets\DisconnectPacket.class
 net\novatech\jbprotocol\bedrock\packets\MovePlayerPacket$TeleportationCause.class
 net\novatech\jbprotocol\java\packets\play\clientbound\ClearTitlesPacket.class
 net\novatech\jbprotocol\java\packets\status\RequestPacket.class

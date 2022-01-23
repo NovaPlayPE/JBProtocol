@@ -13,9 +13,9 @@ public class TcpServerSession extends TcpSession {
 	
 	@Override
 	public void customChannelInactive(ChannelHandlerContext ctx) throws Exception {
-		JavaSession session = this.server.searchByTcp(this);
+		JavaSession session = this.server.mainServer.getSessionManager().searchSession(this);
 		
-		this.server.sessions.remove(session);
+		this.server.mainServer.getSessionManager().sessions.remove(session);
 		this.server.mainServer.getServerListener().sessionDisconnected(session, "Session dissconnected");
 		
 	}

@@ -4,6 +4,7 @@ C:\Users\gebab\Desktop\WallServer\JavaBedrock\JBProtocol\src\main\java\net\novat
 C:\Users\gebab\Desktop\WallServer\JavaBedrock\JBProtocol\src\main\java\net\novatech\jbprotocol\java\packets\status\ServerPingPacket.java
 C:\Users\gebab\Desktop\WallServer\JavaBedrock\JBProtocol\src\main\java\net\novatech\jbprotocol\listener\GameListener.java
 C:\Users\gebab\Desktop\WallServer\JavaBedrock\JBProtocol\src\main\java\net\novatech\jbprotocol\tcp\TcpPacketEncryptor.java
+C:\Users\gebab\Desktop\WallServer\JavaBedrock\JBProtocol\src\main\java\net\novatech\jbprotocol\bedrock\packets\DisconnectPacket.java
 C:\Users\gebab\Desktop\WallServer\JavaBedrock\JBProtocol\src\main\java\net\novatech\jbprotocol\bedrock\packets\BlockEventPacket.java
 C:\Users\gebab\Desktop\WallServer\JavaBedrock\JBProtocol\src\main\java\net\novatech\jbprotocol\java\packets\play\clientbound\BlockEntityDataPacket.java
 C:\Users\gebab\Desktop\WallServer\JavaBedrock\JBProtocol\src\main\java\net\novatech\jbprotocol\bedrock\packets\LevelChunkPacket.java
@@ -57,7 +58,6 @@ C:\Users\gebab\Desktop\WallServer\JavaBedrock\JBProtocol\src\main\java\net\novat
 C:\Users\gebab\Desktop\WallServer\JavaBedrock\JBProtocol\src\main\java\net\novatech\jbprotocol\util\chunk\ChunkData.java
 C:\Users\gebab\Desktop\WallServer\JavaBedrock\JBProtocol\src\main\java\net\novatech\jbprotocol\bedrock\BedrockSessionData.java
 C:\Users\gebab\Desktop\WallServer\JavaBedrock\JBProtocol\src\main\java\net\novatech\jbprotocol\tcp\TcpPacketDecompressor.java
-C:\Users\gebab\Desktop\WallServer\JavaBedrock\JBProtocol\src\main\java\net\novatech\jbprotocol\bedrock\packets\DissconnectPacket.java
 C:\Users\gebab\Desktop\WallServer\JavaBedrock\JBProtocol\src\main\java\net\novatech\jbprotocol\java\packets\play\clientbound\SculkVibrationPacket.java
 C:\Users\gebab\Desktop\WallServer\JavaBedrock\JBProtocol\src\main\java\net\novatech\jbprotocol\bedrock\packets\EntityEventPacket.java
 C:\Users\gebab\Desktop\WallServer\JavaBedrock\JBProtocol\src\main\java\net\novatech\jbprotocol\java\JavaSessionData.java

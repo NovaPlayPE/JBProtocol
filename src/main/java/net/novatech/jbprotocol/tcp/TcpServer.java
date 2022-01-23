@@ -1,6 +1,7 @@
 package net.novatech.jbprotocol.tcp;
 
 import net.novatech.jbprotocol.util.MessageConsumer;
+import net.novatech.jbprotocol.GameSession;
 import net.novatech.jbprotocol.ProtocolServer;
 import net.novatech.jbprotocol.java.JavaSession;
 import io.netty.bootstrap.Bootstrap;
@@ -22,7 +23,6 @@ public class TcpServer {
 	public ProtocolServer mainServer;
 	private ServerBootstrap tcpSocket;
 	private ChannelFuture future;
-	public List<JavaSession> sessions = new ArrayList<JavaSession>();
 	
 	public TcpServer(ProtocolServer mainServer) {
 		this.mainServer = mainServer;
@@ -38,7 +38,6 @@ public class TcpServer {
 					public void initChannel(Channel channel) {
 						TcpSession nettySession = new TcpServerSession(TcpServer.this);
 						nettySession.setAddress((InetSocketAddress) channel.remoteAddress());
-						JavaSession session = new JavaSession(nettySession);
 						
 						channel.config().setOption(ChannelOption.TCP_NODELAY, true);
 						channel.pipeline().addLast("timeout", new ReadTimeoutHandler(30));
@@ -48,8 +47,7 @@ public class TcpServer {
 						channel.pipeline().addLast("decoder", new TcpPacketDecoder());
 						channel.pipeline().addLast("session", nettySession);
 						
-						TcpServer.this.mainServer.getServerListener().sessionConnected(session);
-
+						TcpServer.this.mainServer.getSessionManager().addJavaConection(nettySession);
 			}
 					
 		});
@@ -69,26 +67,11 @@ public class TcpServer {
 		if(this.future == null) {
 			return;
 		}
-		for(JavaSession session : this.sessions) {
-			session.getMcConnection().getChannel().close();
+		for(GameSession session : this.mainServer.getSessionManager().sessions) {
+			((JavaSession)session).getMcConnection().getChannel().close();
 		}
 		this.future = null;
 		this.tcpSocket = null;
-	}
-	
-	public JavaSession searchByTcp(TcpServerSession tcp) {
-		for(JavaSession session : sessions){
-			if(session.getMcConnection() == tcp) {
-				return session;
-			}
-		}
-		return null;
-	}
-	
-	public void tick() {
-		for(JavaSession session : sessions) {
-			session.tick();
-		}
 	}
 	
 }

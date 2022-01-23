@@ -1,6 +1,9 @@
-package net.novatech.jbprotocol;
+package net.novatech.jbprotocol.util;
 
 import java.util.*;
+
+import net.novatech.jbprotocol.GameEdition;
+import net.novatech.jbprotocol.MinecraftProtocol;
 
 public class VersionRegistry {
 	

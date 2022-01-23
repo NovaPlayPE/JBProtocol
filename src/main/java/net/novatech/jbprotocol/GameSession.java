@@ -17,6 +17,7 @@ public interface GameSession {
 	void sendPacket(AbstractPacket pk);
 	void tick();
 	
+	void disconnect(String reason);
 	void requireAuthentication(boolean auth);
 	
 }
