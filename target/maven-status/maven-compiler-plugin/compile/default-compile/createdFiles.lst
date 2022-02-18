@@ -2,6 +2,7 @@ net\novatech\jbprotocol\bedrock\packets\EntityEventPacket$EntityEvent.class
 net\novatech\jbprotocol\java\packets\play\clientbound\AcknowledgePlayerDiggingPacket.class
 net\novatech\jbprotocol\java\JavaSessionData.class
 net\novatech\jbprotocol\java\JavaSession$1.class
+net\novatech\jbprotocol\util\VersionRegistry.class
 net\novatech\jbprotocol\auth\yggdrasil\YggdrasilSession.class
 net\novatech\jbprotocol\listener\LoginListener.class
 net\novatech\jbprotocol\java\packets\play\clientbound\BlockActionPacket.class
@@ -80,6 +81,7 @@ net\novatech\jbprotocol\java\packets\handshake\HandshakePacket$HandshakeState.cl
 net\novatech\jbprotocol\java\packets\play\clientbound\SpawnEntityPacket.class
 net\novatech\jbprotocol\java\packets\login\DissconnectPacket.class
 net\novatech\jbprotocol\java\packets\play\clientbound\ClientChatPacket.class
+net\novatech\jbprotocol\SessionManager.class
 net\novatech\jbprotocol\auth\microsoft\MicrosoftAuthService.class
 net\novatech\jbprotocol\bedrock\packets\BlockEventPacket.class
 net\novatech\jbprotocol\data\Pong.class
@@ -113,10 +115,10 @@ net\novatech\jbprotocol\bedrock\packets\BossEventPacket$Color.class
 net\novatech\jbprotocol\java\packets\play\clientbound\DeclareCommandsPacket.class
 net\novatech\jbprotocol\bedrock\packets\TextPacket$1.class
 net\novatech\jbprotocol\bedrock\packets\RemoveActorPacket.class
+net\novatech\jbprotocol\util\ServerConnectInfo.class
 net\novatech\jbprotocol\java\packets\login\LoginPluginResponsePacket.class
 net\novatech\jbprotocol\tcp\TcpPacketDecoder.class
 net\novatech\jbprotocol\java\packets\play\clientbound\ServerDifficultyPacket$Difficulty.class
-net\novatech\jbprotocol\VersionRegistry.class
 net\novatech\jbprotocol\GameSession.class
 net\novatech\jbprotocol\java\packets\status\ServerPingPacket.class
 net\novatech\jbprotocol\java\packets\play\clientbound\SculkVibrationPacket.class
@@ -126,7 +128,6 @@ net\novatech\jbprotocol\bedrock\packets\TakeItemEntityPacket.class
 net\novatech\jbprotocol\java\packets\login\EncryptionRequestPacket.class
 net\novatech\jbprotocol\java\packets\login\EncryptionResponsePacket.class
 net\novatech\jbprotocol\java\packets\play\clientbound\ServerDifficultyPacket.class
-net\novatech\jbprotocol\ServerConnectInfo.class
 net\novatech\jbprotocol\bedrock\packets\PlayStatusPacket$Status.class
 net\novatech\jbprotocol\bedrock\packets\TickSyncPacket.class
 net\novatech\jbprotocol\listener\LoginServerListener.class

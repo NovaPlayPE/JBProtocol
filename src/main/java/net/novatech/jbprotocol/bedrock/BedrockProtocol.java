@@ -9,7 +9,7 @@ public class BedrockProtocol extends MinecraftProtocol {
 	public BedrockProtocol(boolean client) {
 		super(client);
 		this.gameEdition = GameEdition.BEDROCK;
-		this.gameVersion = "1.18.2";
+		this.gameVersion = "1.18.0.2";
 		this.setProtocolVersion(475);
 		registerPackets();
 	}

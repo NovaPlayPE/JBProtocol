@@ -10,6 +10,7 @@ import java.util.concurrent.TimeUnit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import io.gomint.jraknet.EventLoops;
 import io.gomint.jraknet.Connection;
 import io.gomint.jraknet.ServerSocket;
 import io.gomint.jraknet.Socket;
@@ -87,7 +88,10 @@ public class ProtocolServer {
 	public void close() {
 		switch(this.gameProtocol) {
 		case JAVA -> this.tcpServer.close();
-		case BEDROCK -> this.udpServer.close();
+		case BEDROCK -> {
+			EventLoops.cleanup();
+			this.udpServer.close();
+			}
 		}
 	}
 	
@@ -115,7 +119,7 @@ public class ProtocolServer {
 				break;
 			case CONNECTION_CLOSED:
 			case CONNECTION_DISCONNECTED:
-				System.out.println("Someone tried to disconnect: " + event.getConnection().getAddress().toString());
+				System.out.println("Someone tried to disconnect: " + event.getConnection().getAddress().toString() + ", reason: "+ event.getReason());
 				BedrockSession sessionn = getSessionManager().searchSession(event.getConnection());
 				getSessionManager().sessions.remove(sessionn);
 				getServerListener().sessionDisconnected(sessionn, "Session dissconected: " + event.getReason());

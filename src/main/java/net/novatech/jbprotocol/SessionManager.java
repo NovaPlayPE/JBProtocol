@@ -24,17 +24,23 @@ public class SessionManager {
 	public void tick() {
 		if(server.getGameProtocol() == GameEdition.BEDROCK) {
 			while(!this.comingBedrockConnections.isEmpty()) {
+				System.out.println("Adding new session");
 				Connection con = this.comingBedrockConnections.poll();
-				BedrockSession session = new BedrockSession(con);
-				this.sessions.add(session);
-				this.server.getServerListener().sessionConnected(session);
+				if (con != null) {
+					BedrockSession session = new BedrockSession(con);
+					this.sessions.add(session);
+					this.server.getServerListener().sessionConnected(session);
+				}
 			}
 		} else {
 			while(!this.comingJavaConnections.isEmpty()) {
+				System.out.println("Adding new session");
 				TcpSession con = this.comingJavaConnections.poll();
-				JavaSession session = new JavaSession(con);
-				this.sessions.add(session);
-				this.server.getServerListener().sessionConnected(session);
+				if (con != null) {
+					JavaSession session = new JavaSession(con);
+					this.sessions.add(session);
+					this.server.getServerListener().sessionConnected(session);
+				}
 			}
 		}
 		this.sessions.forEach(sus -> {sus.tick();});

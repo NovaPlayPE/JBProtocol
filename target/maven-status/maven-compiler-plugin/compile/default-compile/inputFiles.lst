@@ -4,11 +4,13 @@ C:\Users\gebab\Desktop\WallServer\JavaBedrock\JBProtocol\src\main\java\net\novat
 C:\Users\gebab\Desktop\WallServer\JavaBedrock\JBProtocol\src\main\java\net\novatech\jbprotocol\java\packets\status\ServerPingPacket.java
 C:\Users\gebab\Desktop\WallServer\JavaBedrock\JBProtocol\src\main\java\net\novatech\jbprotocol\listener\GameListener.java
 C:\Users\gebab\Desktop\WallServer\JavaBedrock\JBProtocol\src\main\java\net\novatech\jbprotocol\tcp\TcpPacketEncryptor.java
+C:\Users\gebab\Desktop\WallServer\JavaBedrock\JBProtocol\src\main\java\net\novatech\jbprotocol\util\VersionRegistry.java
 C:\Users\gebab\Desktop\WallServer\JavaBedrock\JBProtocol\src\main\java\net\novatech\jbprotocol\bedrock\packets\DisconnectPacket.java
 C:\Users\gebab\Desktop\WallServer\JavaBedrock\JBProtocol\src\main\java\net\novatech\jbprotocol\bedrock\packets\BlockEventPacket.java
 C:\Users\gebab\Desktop\WallServer\JavaBedrock\JBProtocol\src\main\java\net\novatech\jbprotocol\java\packets\play\clientbound\BlockEntityDataPacket.java
 C:\Users\gebab\Desktop\WallServer\JavaBedrock\JBProtocol\src\main\java\net\novatech\jbprotocol\bedrock\packets\LevelChunkPacket.java
 C:\Users\gebab\Desktop\WallServer\JavaBedrock\JBProtocol\src\main\java\net\novatech\jbprotocol\GameSession.java
+C:\Users\gebab\Desktop\WallServer\JavaBedrock\JBProtocol\src\main\java\net\novatech\jbprotocol\SessionManager.java
 C:\Users\gebab\Desktop\WallServer\JavaBedrock\JBProtocol\src\main\java\net\novatech\jbprotocol\java\packets\play\clientbound\BlockBreakAnimationPacket.java
 C:\Users\gebab\Desktop\WallServer\JavaBedrock\JBProtocol\src\main\java\net\novatech\jbprotocol\bedrock\packets\TickSyncPacket.java
 C:\Users\gebab\Desktop\WallServer\JavaBedrock\JBProtocol\src\main\java\net\novatech\jbprotocol\bedrock\packets\AddPaintingPacket.java
@@ -52,7 +54,6 @@ C:\Users\gebab\Desktop\WallServer\JavaBedrock\JBProtocol\src\main\java\net\novat
 C:\Users\gebab\Desktop\WallServer\JavaBedrock\JBProtocol\src\main\java\net\novatech\jbprotocol\bedrock\packets\BossEventPacket.java
 C:\Users\gebab\Desktop\WallServer\JavaBedrock\JBProtocol\src\main\java\net\novatech\jbprotocol\java\packets\play\clientbound\DeclareCommandsPacket.java
 C:\Users\gebab\Desktop\WallServer\JavaBedrock\JBProtocol\src\main\java\net\novatech\jbprotocol\auth\Property.java
-C:\Users\gebab\Desktop\WallServer\JavaBedrock\JBProtocol\src\main\java\net\novatech\jbprotocol\ServerConnectInfo.java
 C:\Users\gebab\Desktop\WallServer\JavaBedrock\JBProtocol\src\main\java\net\novatech\jbprotocol\bedrock\packets\SetTimePacket.java
 C:\Users\gebab\Desktop\WallServer\JavaBedrock\JBProtocol\src\main\java\net\novatech\jbprotocol\java\JavaProtocol.java
 C:\Users\gebab\Desktop\WallServer\JavaBedrock\JBProtocol\src\main\java\net\novatech\jbprotocol\util\chunk\ChunkData.java
@@ -106,7 +107,6 @@ C:\Users\gebab\Desktop\WallServer\JavaBedrock\JBProtocol\src\main\java\net\novat
 C:\Users\gebab\Desktop\WallServer\JavaBedrock\JBProtocol\src\main\java\net\novatech\jbprotocol\java\packets\login\DissconnectPacket.java
 C:\Users\gebab\Desktop\WallServer\JavaBedrock\JBProtocol\src\main\java\net\novatech\jbprotocol\java\JavaGameState.java
 C:\Users\gebab\Desktop\WallServer\JavaBedrock\JBProtocol\src\main\java\net\novatech\jbprotocol\java\packets\status\RequestPacket.java
-C:\Users\gebab\Desktop\WallServer\JavaBedrock\JBProtocol\src\main\java\net\novatech\jbprotocol\VersionRegistry.java
 C:\Users\gebab\Desktop\WallServer\JavaBedrock\JBProtocol\src\main\java\net\novatech\jbprotocol\bedrock\packets\TakeItemEntityPacket.java
 C:\Users\gebab\Desktop\WallServer\JavaBedrock\JBProtocol\src\main\java\net\novatech\jbprotocol\bedrock\packets\UpdateBlockPacket.java
 C:\Users\gebab\Desktop\WallServer\JavaBedrock\JBProtocol\src\main\java\net\novatech\jbprotocol\bedrock\packets\util\ResourcePackInfo.java
@@ -118,5 +118,6 @@ C:\Users\gebab\Desktop\WallServer\JavaBedrock\JBProtocol\src\main\java\net\novat
 C:\Users\gebab\Desktop\WallServer\JavaBedrock\JBProtocol\src\main\java\net\novatech\jbprotocol\java\packets\handshake\HandshakePacket.java
 C:\Users\gebab\Desktop\WallServer\JavaBedrock\JBProtocol\src\main\java\net\novatech\jbprotocol\java\packets\login\LoginPluginRequestPacket.java
 C:\Users\gebab\Desktop\WallServer\JavaBedrock\JBProtocol\src\main\java\net\novatech\jbprotocol\auth\AuthService.java
+C:\Users\gebab\Desktop\WallServer\JavaBedrock\JBProtocol\src\main\java\net\novatech\jbprotocol\util\ServerConnectInfo.java
 C:\Users\gebab\Desktop\WallServer\JavaBedrock\JBProtocol\src\main\java\net\novatech\jbprotocol\packet\AbstractPacket.java
 C:\Users\gebab\Desktop\WallServer\JavaBedrock\JBProtocol\src\main\java\net\novatech\jbprotocol\listener\ServerListener.java
