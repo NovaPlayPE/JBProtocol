@@ -5,8 +5,8 @@ import java.util.UUID;
 import io.netty.buffer.ByteBuf;
 import net.novatech.jbprotocol.packet.PacketHelper;
 import net.novatech.library.io.ByteBufUtils;
-import net.novatech.library.math.Rotation;
-import net.novatech.library.math.Vector3f;
+import net.novatech.library.math.motion.Rotation;
+import net.novatech.library.math.vector.Vector3f;
 
 public class AddPlayerPacket extends BedrockPacket {
 	

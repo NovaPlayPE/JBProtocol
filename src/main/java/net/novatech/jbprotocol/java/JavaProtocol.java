@@ -20,7 +20,7 @@ public class JavaProtocol extends MinecraftProtocol {
 	public JavaProtocol(boolean client) {
 		super(client);
 		this.gameEdition = GameEdition.JAVA;
-		this.gameVersion = "1.18.1";
+		this.gameVersion = "1.19.0";
 		this.setProtocolVersion(575);
 	}
 	

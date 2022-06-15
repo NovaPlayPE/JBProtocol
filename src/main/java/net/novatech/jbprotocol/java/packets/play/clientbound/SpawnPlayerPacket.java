@@ -6,8 +6,8 @@ import io.netty.buffer.ByteBuf;
 import net.novatech.jbprotocol.java.packets.JavaPacket;
 import net.novatech.jbprotocol.packet.PacketHelper;
 import net.novatech.library.io.ByteBufUtils;
-import net.novatech.library.math.Rotation;
-import net.novatech.library.math.Vector3d;
+import net.novatech.library.math.motion.Rotation;
+import net.novatech.library.math.vector.Vector3d;
 
 public class SpawnPlayerPacket extends JavaPacket {
 	

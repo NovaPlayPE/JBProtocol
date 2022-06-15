@@ -6,10 +6,10 @@ import net.novatech.jbprotocol.bedrock.BedrockSession;
 import net.novatech.jbprotocol.bedrock.packets.BedrockPacket;
 import net.novatech.jbprotocol.bedrock.packets.Wrapper;
 import net.novatech.library.io.ByteBufUtils;
-import net.novatech.library.math.Rotation;
-import net.novatech.library.math.Vector3d;
-import net.novatech.library.math.Vector3f;
-import net.novatech.library.math.Vector3i;
+import net.novatech.library.math.motion.Rotation;
+import net.novatech.library.math.vector.Vector3d;
+import net.novatech.library.math.vector.Vector3f;
+import net.novatech.library.math.vector.Vector3i;
 
 public class PacketHelper {
 	

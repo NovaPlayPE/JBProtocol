@@ -1,10 +1,9 @@
 package net.novatech.jbprotocol.bedrock.packets;
 
 import io.netty.buffer.ByteBuf;
-
-import net.novatech.library.math.Vector3f;
 import net.novatech.jbprotocol.packet.PacketHelper;
 import net.novatech.library.io.ByteBufUtils;
+import net.novatech.library.math.vector.Vector3f;
 
 public class LevelEventPacket extends BedrockPacket {
 	

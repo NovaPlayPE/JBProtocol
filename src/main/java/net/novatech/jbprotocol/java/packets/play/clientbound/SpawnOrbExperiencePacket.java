@@ -4,7 +4,7 @@ import io.netty.buffer.ByteBuf;
 import net.novatech.jbprotocol.java.packets.JavaPacket;
 import net.novatech.jbprotocol.packet.PacketHelper;
 import net.novatech.library.io.ByteBufUtils;
-import net.novatech.library.math.Vector3d;
+import net.novatech.library.math.vector.Vector3d;
 
 public class SpawnOrbExperiencePacket extends JavaPacket {
 	
