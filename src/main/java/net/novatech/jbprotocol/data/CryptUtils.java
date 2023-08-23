@@ -25,7 +25,7 @@ public class CryptUtils {
 	public static KeyGenerator EC_GEN; 
 	public static KeyPair JAVA_KEY;
 	public static PublicKey MOJANG_BEDROCK_PUBLIC_KEY;
-	private static String MOJANG_BEDROCK_PUBLIC_KEY_STRING = "MHYwEAYHKoZIzj0CAQYFK4EEACIDYgAE8ELkixyLcwlZryUQcu1TvPOmI2B7vX83ndnWRUaXm74wFfa5f/lwQNTfrLVHa2PmenpGI6JhIMUJaWZrjmMj90NoKNFSNBuKdm8rYiXsfaz3K36x/1U26HpG0ZxK/V1V";
+	private static String MOJANG_BEDROCK_PUBLIC_KEY_STRING = "MHYwEAYHKoZIzj0CAQYFK4EEACIDYgAECRXueJeTDqNRRgJi/vlRufByu/2G0i2Ebt6YMar5QX/R0DIIyrJMcUpruK4QveTfJSTp3Shlq4Gk34cD/4GUWwkv0DVuzeuB+tXija7HBxii03NHDbPAD0AKnLr2wdAp";
 	
 	static {
 		try	{
